@@ -49,7 +49,7 @@
 * Considerado Call en las llamadas a funciones.
 * Considerado Assign en las definiciones de variables.
 * Alterar nombres de las funciones Autoit.
-* Todos los parámetros de los procesos son elegidos de forma aleatoria entre los valores límite especificados por el usuario (incrementa la dispersión y permite incrementar la exploración del espacio de soluciones si se emplean algoritmos genéticos para optimizar los parámetros).
+* Todos los parámetros se generan de forma aleatoria entre los valores límite especificados por el usuario y las posibilidades existentes en una tarea e.g. Definir variable con Assign o sin Assign, declarar variables con Local, Dim o Global etc. Esto aumenta la dispersión y además permite incrementar la exploración del espacio de soluciones si se emplean algoritmos genéticos para optimizar los parámetros.
  
 
 ## Futuras versiones
