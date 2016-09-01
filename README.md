@@ -1,5 +1,5 @@
 # OBFAU3 (Autoit-Obfuscator)
-## Características del proceso
+## Características del proceso de ofuscado
 
 * Número de iteraciones del proceso de ofuscado.
 * Enlazar includes desde otros ficheros del proyecto.
@@ -41,7 +41,7 @@
 * Definición de la aridad mínima y máxima de las funciones a añadir (define el número de parámetros de una función).
 * Es necesario especificar todos estos valores en las tres posibilidades de adición de bloques (inicio,final,medio).
 
-## Otras características:
+## Otras características
 
 * Definición de la profundidad máxima en el ofuscado de enteros.
 * Definición del tamaño en KB de la secuencia de símbolos a añadir tras el EOF.
