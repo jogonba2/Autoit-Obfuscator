@@ -28,7 +28,7 @@
 
 ## Características de los bloques de código generados 
 
-* Generación de código y bloques if,for,switch,func y simple (definiciones de nuevas variables haciendo uso de macros,constantes ofuscadas, funciones del lenguaje de aridades 0,1 y 2 y valores de tipos básicos)
+* Generación de código y bloques If, For, Switch, Func y Simple (definiciones de nuevas variables haciendo uso de macros,constantes ofuscadas, funciones del lenguaje de aridades 0,1 y 2 y valores de tipos básicos)
 * Definición del número mínimo y máximo de bloques a añadir.
 * Definición del número mínimo y máximo de sentencias a añadir dentro del bloque (estas sentencias pueden ser a su vez nuevos bloques).
 * Definición del número mínimo y máximo de condiciones lógicas a añadir en la guarda de los bloques generados.
@@ -45,8 +45,11 @@
 
 * Definición de la profundidad máxima en el ofuscado de enteros.
 * Definición del tamaño en KB de la secuencia de símbolos a añadir tras el EOF.
+* Variables declaradas con Local, Dim y Global.
+* Considerado Call en las llamadas a funciones.
+* Considerado Assign en las definiciones de variables.
+* Alterar nombres de las funciones Autoit.
 * Todos los parámetros de los procesos son elegidos de forma aleatoria entre los valores límite especificados por el usuario (incrementa la dispersión y permite incrementar la exploración del espacio de soluciones si se emplean algoritmos genéticos para optimizar los parámetros).
-* Varios cifrados implementados (XOR,AES,DES,...)
  
 
 ## Futuras versiones
