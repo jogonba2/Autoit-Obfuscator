@@ -216,15 +216,15 @@ if __name__ == "__main__":
     add_end_blocks  = 1
     add_mid_blocks  = 1
     add_user_funcs  = 1
-    add_func_calls  = 1
-    hide_strings_replace = 1
+    add_func_calls  = 0
+    hide_strings_replace = 0
     hide_strings_shuffle = 0
     hide_strings_cipher  = 0
     hide_strings_reverse = 1
     hide_numbers         = 1
-    add_directives       = 1
+    add_directives       = 0
     add_tabs             = 0
-    add_to_eof           = 1
+    add_to_eof           = 0
     
     ########################
     ## Hardcoded params   ##
@@ -238,13 +238,13 @@ if __name__ == "__main__":
     ########################
     
     init_min_blocks          	 = 1
-    init_max_blocks          	 = 2
+    init_max_blocks          	 = 3
     init_n_statements_min    	 = 1
-    init_n_statements_max        = 2 
+    init_n_statements_max        = 3 
     init_n_guard_statements_min  = 1
-    init_n_guard_statements_max  = 2
+    init_n_guard_statements_max  = 3
     init_n_else_if_min		 = 1
-    init_n_else_if_max		 = 2
+    init_n_else_if_max		 = 3
     init_deep_max		 = 2
     init_case_values_min	 = 204
     init_case_values_max	 = 3048
@@ -254,11 +254,11 @@ if __name__ == "__main__":
     ########################
     
     end_min_blocks          	 = 1
-    end_max_blocks          	 = 2
+    end_max_blocks          	 = 3
     end_n_statements_min    	 = 1
-    end_n_statements_max         = 2 
+    end_n_statements_max         = 3 
     end_n_guard_statements_min   = 1
-    end_n_guard_statements_max   = 2
+    end_n_guard_statements_max   = 3
     end_n_else_if_min		 = 1
     end_n_else_if_max		 = 2
     end_deep_max		 = 2
@@ -271,11 +271,11 @@ if __name__ == "__main__":
     
     mid_prob_block               = 0.35
     mid_n_statements_min	 = 1
-    mid_n_statements_max	 = 2
+    mid_n_statements_max	 = 3
     mid_n_guard_statements_min	 = 1
-    mid_n_guard_statements_max	 = 2
+    mid_n_guard_statements_max	 = 3
     mid_n_else_if_min		 = 1
-    mid_n_else_if_max		 = 2
+    mid_n_else_if_max		 = 3
     mid_deep_max		 = 2
     mid_case_values_min		 = 204
     mid_case_values_max		 = 3048
@@ -285,7 +285,7 @@ if __name__ == "__main__":
     ########################
     
     func_n_functions_min	 = 1
-    func_n_functions_max	 = 2
+    func_n_functions_max	 = 4
     func_arity_min 		 = 2
     func_arity_max		 = 4
     func_n_statements_min	 = 1

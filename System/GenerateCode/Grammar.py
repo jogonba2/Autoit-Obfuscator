@@ -35,7 +35,12 @@ def relational_operation(): return choice([">","<",">=","<=","<>","="])
 
 def arithmetic_operation(): return choice(['+','-','*','/'])
 def arithmetic_assign():    return choice(['+=','-=','*=','/='])
-
+def assign(var,val):
+    rnd = randint(0,1)
+    if rnd==0: return Utils.generate_random_declarator()+var+" = "+val+"\n"
+    else:      return Utils.generate_random_declarator()+var+" = 0\nAssign('"+var+"','"+val.replace('"',"").replace("'","")+"')\n"
+	    
+	
 def logical_operation(): return choice(["And","Or"])
 
 def logical_statement(spaces_min=1,spaces_max=5): return variable()+" "+relational_operation()+" "+value() # Facilita las cosas un formato estándar #
@@ -70,19 +75,19 @@ def simple_block(n_statements_min=10,n_statements_max=20): # Solo asignaciones (
     values       = [value() for i in xrange(n_statements)]
     res = ""
     for i in xrange(n_statements): 
-	res += "Local "+variables[i]+" = "+values[i]+"\n"
+	res += assign(variables[i],values[i])+"\n"
     for i in xrange(n_statements/2):
 	arity = randint(-1,2) # Aridades 0,1 y 2 #
 	if arity==-1:   
 	    r,rp  = randint(0,len(variables)-1),randint(0,len(variables)-1)
 	    res  += variables[r]+" "+arithmetic_assign()+" "+variables[rp]+"\n"
-	elif arity==0:  res  += choice(Config.FUNCTIONS_ZERO_ARITY) + "()\n"
+	elif arity==0:  res  += Utils.low_up_string(choice(Config.FUNCTIONS_ZERO_ARITY)) + "()\n"
 	elif arity==1:  
 	    r,rf,rp  = randint(0,len(variables)-1),randint(0,len(Config.FUNCTIONS_ONE_ARITY)-1),randint(0,len(variables)-1)
-	    res  += variables[r]+" "+arithmetic_assign()+" "+Config.FUNCTIONS_ONE_ARITY[rf]+"("+variables[rp]+")\n"
+	    res  += variables[r]+" "+arithmetic_assign()+" "+Utils.low_up_string(Config.FUNCTIONS_ONE_ARITY[rf])+"("+variables[rp]+")\n"
 	elif arity==2:
 	    r,rf,rp,rt = randint(0,len(variables)-1),randint(0,len(Config.FUNCTIONS_TWO_ARITY)-1),randint(0,len(variables)-1),randint(0,len(variables)-1)
-	    res  += variables[r]+" "+arithmetic_assign()+" "+Config.FUNCTIONS_TWO_ARITY[rf]+"("+variables[rp]+","+variables[rt]+")\n"
+	    res  += variables[r]+" "+arithmetic_assign()+" "+Utils.low_up_string(Config.FUNCTIONS_TWO_ARITY[rf])+"("+variables[rp]+","+variables[rt]+")\n"
     return res
     
 def block_if(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements_min=1,n_guard_statements_max=5,n_else_if_min=1,n_else_if_max=5,deep_max=5,case_values_min=-1000,case_values_max=1000): 
@@ -91,7 +96,7 @@ def block_if(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements
     n_guard_statements = randint(min(n_guard_statements_min,n_guard_statements_max),max(n_guard_statements_min,n_guard_statements_max))
     log_statements = logical_statements(n_guard_statements) + " Then\n"
     logic_variables = ExtractKeywords.extract_variables(log_statements)
-    for i in logic_variables: declarations += "Local "+assign_by_var_name(i)+"\n"
+    for i in logic_variables: declarations += Utils.generate_random_declarator()+assign_by_var_name(i)+"\n"
     res += log_statements
     res += block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)+"\n"
     else_type = randint(0,1) # 0 -> Else if, 1 -> Else #
@@ -100,7 +105,7 @@ def block_if(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements
 	for i in xrange(n_else_if):	    
 	    log_statements = logical_statements(randint(min(n_guard_statements_min,n_guard_statements_max),max(n_guard_statements_min,n_guard_statements_max)))
 	    logic_variables = ExtractKeywords.extract_variables(log_statements)
-	    for i in logic_variables: declarations += "Local "+assign_by_var_name(i)+"\n"
+	    for i in logic_variables: declarations += Utils.generate_random_declarator()+assign_by_var_name(i)+"\n"
 	    res += "ElseIf "+log_statements+" Then\n"+block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)+"\n"
     res += "Else \n"+block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)+"\n"
     res += "EndIf\n"
@@ -110,7 +115,7 @@ def block_for(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statement
     a,b = integer(),integer()
     a,b = min(a,b),max(a,b)
     v   = variable()
-    declaration = "Local "+assign_by_var_name(v)+"\n\n"
+    declaration = Utils.generate_random_declarator()+assign_by_var_name(v)+"\n\n"
     res = "For "+assign_full(v,a)+" To "+b+"\n"+block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)+"\n Next\n"
     return declaration+res
 
@@ -121,15 +126,13 @@ def block_while(deep_act,n_statements_min=10,n_statements_max=20,n_guard_stateme
     logic_variables = ExtractKeywords.extract_variables(log_statements)
     relational_operators = ExtractKeywords.extract_relational_operators(log_statements)
     const_values         = ExtractKeywords.extract_integer(log_statements)
-    #print logic_variables,relational_operators,const_values
-    for i in logic_variables: declarations += "Local "+assign_by_var_name(i)+"\n"
+    for i in logic_variables: declarations += Utils.generate_random_declarator()+assign_by_var_name(i)+"\n"
     res = declarations+"\nWhile "+log_statements
-    #print res
     return res # Acabar #
     
 def block_switch(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements_min=1,n_guard_statements_max=5,n_else_if_min=1,n_else_if_max=5,deep_max=5,case_values_min=-1000,case_values_max=1000): 
     v = variable()
-    declaration = "Local "+assign_by_var_name(v)+"\n"
+    declaration = Utils.generate_random_declarator()+assign_by_var_name(v)+"\n"
     n_cases = randint(min(n_else_if_min,n_else_if_max),max(n_else_if_min,n_else_if_max))
     res = "Switch "+v+"\n" 
     for i in xrange(n_cases):

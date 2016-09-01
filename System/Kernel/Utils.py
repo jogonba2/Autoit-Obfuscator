@@ -73,6 +73,16 @@ def generate_random_string(length_min=5,length_max=10,ext=".exe"): return "".joi
 
 def generate_random_key(B): return "".join([choice(lowercase+uppercase) for i in xrange(B)])
 
+def generate_random_declarator(): return choice(["Dim ","Local ","Global "])
+
+def low_up_string(s):
+    res = ""
+    for i in xrange(len(s)):
+	rnd = randint(0,1)
+	if rnd==0: res += s[i].lower()
+	else:      res += s[i].upper()
+    return res
+    
 def sum(a,b): return a+b
 #def sub(a,b): return a-b
 def dot(a,b): return a*b
