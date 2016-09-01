@@ -8,14 +8,16 @@ from Kernel import ExtractKeywords as ex
 
 def hide_variable_names(obj):
     identifiers = list(ex.extract_variables_from_obj(obj))
+    replaces = Utils.mod_names_hash(identifiers)
     for i in xrange(len(obj)):
 	for j in xrange(len(identifiers)): obj[i] = obj[i].replace(identifiers[j],"$"+replaces[j]) if not not identifiers[j] else obj[i]
     return obj
     
 def hide_function_names(obj):
     identifiers = list(ex.extract_func_names_from_obj(obj))
+    replaces    = Utils.mod_names_identifier(identifiers)
     for i in xrange(len(obj)):
-	for j in xrange(len(identifiers)): obj[i] = obj[i].replace(identifiers[j],replaces[j]) if not identifiers[j] else obj[i]
+	for j in xrange(len(identifiers)): obj[i] = obj[i].replace(identifiers[j],replaces[j]) if not not identifiers[j] else obj[i]
     return obj
 
 if __name__ == "__main__":

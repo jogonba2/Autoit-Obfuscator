@@ -53,6 +53,13 @@ def generate_random_line(vocabulary,len_line,end="_"):
     for i in xrange(len_line): line.append(r)
     return "".join(line+end)
 
+def escape_quotes(code):
+    code = sub('"',"'",code)
+    return code
+
+def standar_quotes(code):
+    return sub('"',"'",code)
+    
 def extract_directories_files():
     name_orig = argv[1][argv[1].rfind("/")+1:]
     for t in walk(getcwd()):
@@ -67,9 +74,21 @@ def generate_random_string(length_min=5,length_max=10,ext=".exe"): return "".joi
 def generate_random_key(B): return "".join([choice(lowercase+uppercase) for i in xrange(B)])
 
 def sum(a,b): return a+b
-def sub(a,b): return a-b
+#def sub(a,b): return a-b
 def dot(a,b): return a*b
 def div(a,b): return a/b
 def exp(a): return e**a
 def log(a): return log(a)
 
+if __name__ == "__main__":
+    print generate_random_string(ext="")
+    #a = extract_code("test.au3")
+    #a = get_string_from_code(a)
+    #a = remove_comments(a)
+    #print a
+    """
+    write_code(a,"test2.au3")
+    serialize_code(a,"test2.bin")
+    b = unserialize_code("test2.bin")
+    print b
+    """

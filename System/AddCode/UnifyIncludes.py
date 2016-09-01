@@ -9,6 +9,7 @@ def replace_includes(obj,directories_files):
     for i in xrange(len(obj)):
 	include = ex.extract_includes(obj[i])
 	if include:
+	    path_content = directories_files[include] if include in directories_files else None
 	    if path_content!=None: obj[i] = Utils.read_file(path_content)
     return obj
 	    

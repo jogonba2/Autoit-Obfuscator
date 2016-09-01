@@ -144,5 +144,37 @@ def name_count(length_min=10,length_max=15):
     Return $iReturn
 EndFunc \n\n"""
 
+
+### String modifiers ###
+
+def reverse_string(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(1)
+    return """Func """+identifier+"""($sText )
+		Local $Result , $i , $sParams
+		$sParams = StringLen($sText)
+		For $i = 0 To $sParams
+		   $Result = $Result & StringMid($sText, $sParams - $i, 1)
+		Next
+		Return $Result
+	      EndFunc
+	   """
+
+def decode_xor(length_min=5,length_max=10): pass
+
+
+def replace_string(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(1)
+    return """Func """+identifier+"""($sText,$symbol)
+		$Result = StringReplace($sText,$symbol,'')
+		Return $Result
+	      EndFunc
+	   """
+	   
+HARDCODED_STRING_MODIFIERS = [replace_string,reverse_string]
+
 HARDCODED_PROGRAMS = [hex_to_string,string_repeat,string_to_hex,string_shuffle,
 		      log_change_base,is_prime,string_dump,random_autoit,name_count]

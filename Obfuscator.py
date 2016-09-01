@@ -4,19 +4,19 @@
 from System.Kernel import Utils,Config,Messages,Globals
 from System.AddCode import AddJunkCode,UnifyIncludes
 from System.Hardcoded import HardcodedPrograms
-from System.HideCode import HideIdentifiers,HideNumbers,HideStrings,HideLines
+from System.HideCode import HideIdentifiers,HideNumbers,HideStrings,HideLines,HideProgram
 from System.RemoveCode import RemoveCode
 from System.Reorder import Reorder
 from sys import argv
 import argparse as ap
 
-def header(): print "\n\n"+"*"*25," AutoIt Obfuscation ","*"*25,"\n"
-def footer(): print "\n\n***************************** Overxfl0w13 *****************************\n"
+def header(): print "\n\n"+"-"*20," OBFAU3 (AutoIt Obfuscation) ","-"*20,"\n"
+def footer(): print "\n\n"+"-"*25," Overxfl0w13 ","-"*25,"\n"
 
-def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comments_by_semicolon, \
+def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comments_by_semicolon,rm_comments_by_hash, \
 	      rm_regions,add_regs,hide_func_names,hide_var_names,add_hard_funcs,add_vars,add_comm, \
 	      add_init_blocks,add_end_blocks,add_mid_blocks,add_user_funcs, \
-	      add_func_calls,hide_strings_replace,hide_strings_shuffle,hide_strings_cipher,\
+	      add_func_calls,hide_strings_replace,hide_strings_shuffle,hide_strings_cipher,hide_strings_reverse,\
 	      hide_numbers,add_directives,add_tabs,add_to_eof,hardcoded_n_funcs_min,\
 	      hardcoded_n_funcs_max,init_min_blocks,init_max_blocks,init_n_statements_min,init_n_statements_max,\
 	      init_n_guard_statements_min,init_n_guard_statements_max,init_n_else_if_min,init_n_else_if_max,\
@@ -28,7 +28,7 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 	      mid_case_values_max,func_n_functions_min,func_n_functions_max,func_arity_min,func_arity_max,\
 	      func_n_statements_min,func_n_statements_max,func_n_guard_statements_min,func_n_guard_statements_max,\
 	      func_n_else_if_min,func_n_else_if_max,func_deep_max,func_case_values_min,func_case_values_max,\
-	      hide_numbers_deep_max_min,hide_numbers_deep_max_max,eof_fill_kb):
+	      hide_numbers_deep_max_min,hide_numbers_deep_max_max,eof_fill_kb,hide_string_reverse):
 		  
     header()
     
@@ -48,26 +48,40 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 	obj  = Utils.get_obj_from_code(code)
 	
     if rm_comments_by_semicolon:
-	print "Removing comments with semicolon"
+	print "Removing comments with semicolon..."
 	obj  = RemoveCode.remove_comments_by_semicolon(obj)
 	
+    if rm_comments_by_hash:
+	print "Removing comments with hash..."
+	obj  = RemoveCode.remove_comments_by_hash(obj)
+	
     if rm_regions:
-	print "Removing region directives"
+	print "Removing region directives..."
 	obj  = RemoveCode.remove_region_directive(obj)
 	
     if hide_func_names:
 	print Messages.hiding_function_names
 	obj  = HideIdentifiers.hide_function_names(obj)	
+    
+    if add_hard_funcs:
+	print "Adding hardcoded functions..."
+	obj  = AddJunkCode.add_hardcoded_funcs(obj,hardcoded_n_funcs_min,hardcoded_n_funcs_max)
+
+    if hide_strings_replace:
+	print "Adding code to replace strings..."
+	obj  = AddJunkCode.add_hardcoded_string_modifiers(obj,HardcodedPrograms.replace_string)
 	
+    if hide_strings_reverse:
+	print "Adding code to reverse strings..."
+	obj  = AddJunkCode.add_hardcoded_string_modifiers(obj,HardcodedPrograms.reverse_string)
+	
+
+		
     for i in xrange(max(0,it)):
 	try:
 	    if add_regs:
-		print "Adding new regions"
+		print "Adding new regions..."
 		obj  = AddJunkCode.add_regions(obj)
-		
-	    if add_hard_funcs:
-		print "Adding hardcoded functions"
-		obj  = AddJunkCode.add_hardcoded_funcs(obj,hardcoded_n_funcs_min,hardcoded_n_funcs_max)
 		    
 	    if hide_var_names:
 		print Messages.hiding_variable_names
@@ -82,7 +96,7 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 		obj  = AddJunkCode.add_comments(obj)
 		    
 	    if add_init_blocks:
-		print "Adding blocks at init"
+		print "Adding blocks at init..."
 		obj  = AddJunkCode.add_blocks_to_init(obj,min_blocks_init=init_min_blocks,
 							  max_blocks_init=init_max_blocks,
 							  n_statements_min=init_n_statements_min,
@@ -96,7 +110,7 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 							  case_values_max=init_case_values_max)
 		
 	    if add_end_blocks:
-		print "Adding blocks at end"
+		print "Adding blocks at end..."
 		obj  = AddJunkCode.add_blocks_to_end(obj,min_blocks_end=end_min_blocks,
 							 max_blocks_end=end_max_blocks,
 							 n_statements_min=end_n_statements_min,
@@ -132,18 +146,22 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 	    if add_func_calls:
 		print Messages.adding_function_calls
 		obj  = AddJunkCode.add_function_calls(obj)
-	       
-	    if hide_strings_cipher:
-		print Message.NOT_IMPLEMENTED
 	    
 	    if hide_strings_replace:
-		print "Ocultando strings con metodo replace"
-		obj  = HideStrings.hide_strings_string_replace(obj)
+		print "Hiding string definitions with replace method..."
+		obj  = HideStrings.hide_strings_replace(obj)
+		
+	    if hide_strings_cipher:
+		print Message.NOT_IMPLEMENTED
 		
 	    if hide_strings_shuffle:
-		print "Ocultando definiciones de strings con metodo shuffle"
+		print "Hiding string definitions with shuffle method..."
 		obj  = HideStrings.hide_strings_definition_shuffle(obj)
-	       
+	    
+	    if hide_strings_reverse:
+		print "Hiding all strings with reverse method..."
+		obj  = HideStrings.hide_strings_reverse(obj)
+		
 	    if hide_numbers:
 		print Messages.hiding_numbers
 		obj  = HideNumbers.hide_numbers(obj,hide_numbers_deep_max_min,hide_numbers_deep_max_max)
@@ -154,7 +172,7 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 	
 	except RuntimeError as re: print "\n\n"+orig_name+Messages.sad_end+"stack overflow because of recursion in block generating, try to reduce deep values and regenerate code :("
 	except IOError as ie:      print "\n\n"+orig_name+Messages.sad_end+"file error, probably you have specified an incorrect file name"
-	except Exception as e:     print "\n\n An unknown error has occurred! \n\n"
+	except Exception as e:     print "\n\n An unknown error has occurred! \n\n",e
     
     if add_tabs:
 	print Messages.adding_tabs
@@ -164,8 +182,10 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 	print Messages.adding_to_eof
 	obj  = AddJunkCode.add_to_eof(obj,size=eof_fill_kb)
     
-    print Messages.writing_code
-    Utils.write_code(Utils.get_string_from_obj(obj),dest_name)
+    else:
+	print Messages.writing_code
+	Utils.write_code(Utils.get_string_from_obj(obj),dest_name)
+	
     print "\n\n! "+orig_name+Messages.happy_end+dest_name+" :)"	
     print "\n? it's probably that obfuscated code takes to run or even not work, then readjusts parameters and generates a new obfuscated code or simply generate it."
     footer()
@@ -178,12 +198,13 @@ if __name__ == "__main__":
     ## Obfuscator params ##
     #######################
     
-    orig_name = "./TestScripts/Gen.au3"
-    dest_name =  "./TestScripts/gen_mod.au3"
+    orig_name = "./TestScripts/PaSad.au3"
+    dest_name =  "./TestScripts/PaSadMod.au3"
     it        = 1
     replace_includes   = 0
-    rm_comments_by_tag = 1
+    rm_comments_by_tag = 0
     rm_comments_by_semicolon = 0
+    rm_comments_by_hash = 1
     rm_regions = 1
     add_regs   = 1
     hide_func_names = 1
@@ -196,13 +217,14 @@ if __name__ == "__main__":
     add_mid_blocks  = 1
     add_user_funcs  = 1
     add_func_calls  = 1
-    hide_strings_replace = 0
+    hide_strings_replace = 1
     hide_strings_shuffle = 0
     hide_strings_cipher  = 0
+    hide_strings_reverse = 1
     hide_numbers         = 1
     add_directives       = 1
     add_tabs             = 0
-    add_to_eof           = 0
+    add_to_eof           = 1
     
     ########################
     ## Hardcoded params   ##
@@ -215,14 +237,14 @@ if __name__ == "__main__":
     ## Init blocks params ##
     ########################
     
-    init_min_blocks          	 = 2
-    init_max_blocks          	 = 4
+    init_min_blocks          	 = 1
+    init_max_blocks          	 = 2
     init_n_statements_min    	 = 1
     init_n_statements_max        = 2 
     init_n_guard_statements_min  = 1
     init_n_guard_statements_max  = 2
-    init_n_else_if_min		 = 2
-    init_n_else_if_max		 = 3
+    init_n_else_if_min		 = 1
+    init_n_else_if_max		 = 2
     init_deep_max		 = 2
     init_case_values_min	 = 204
     init_case_values_max	 = 3048
@@ -231,14 +253,14 @@ if __name__ == "__main__":
     ## End blocks params  ##
     ########################
     
-    end_min_blocks          	 = 2
-    end_max_blocks          	 = 6
+    end_min_blocks          	 = 1
+    end_max_blocks          	 = 2
     end_n_statements_min    	 = 1
     end_n_statements_max         = 2 
     end_n_guard_statements_min   = 1
     end_n_guard_statements_max   = 2
-    end_n_else_if_min		 = 2
-    end_n_else_if_max		 = 3
+    end_n_else_if_min		 = 1
+    end_n_else_if_max		 = 2
     end_deep_max		 = 2
     end_case_values_min	 	 = 204
     end_case_values_max	 	 = 3048
@@ -247,14 +269,14 @@ if __name__ == "__main__":
     ## Mid blocks params  ##
     ########################
     
-    mid_prob_block               = 0.85
+    mid_prob_block               = 0.35
     mid_n_statements_min	 = 1
-    mid_n_statements_max	 = 5
-    mid_n_guard_statements_min	 = 2
-    mid_n_guard_statements_max	 = 3
-    mid_n_else_if_min		 = 2
-    mid_n_else_if_max		 = 3
-    mid_deep_max		 = 3
+    mid_n_statements_max	 = 2
+    mid_n_guard_statements_min	 = 1
+    mid_n_guard_statements_max	 = 2
+    mid_n_else_if_min		 = 1
+    mid_n_else_if_max		 = 2
+    mid_deep_max		 = 2
     mid_case_values_min		 = 204
     mid_case_values_max		 = 3048
     
@@ -263,15 +285,15 @@ if __name__ == "__main__":
     ########################
     
     func_n_functions_min	 = 1
-    func_n_functions_max	 = 3
+    func_n_functions_max	 = 2
     func_arity_min 		 = 2
     func_arity_max		 = 4
-    func_n_statements_min	 = 3
-    func_n_statements_max	 = 4
-    func_n_guard_statements_min	 = 2
-    func_n_guard_statements_max	 = 4
+    func_n_statements_min	 = 1
+    func_n_statements_max	 = 3
+    func_n_guard_statements_min	 = 1
+    func_n_guard_statements_max	 = 3
     func_n_else_if_min		 = 1
-    func_n_else_if_max		 = 5
+    func_n_else_if_max		 = 3
     func_deep_max		 = 2
     func_case_values_min	 = 1078
     func_case_values_max	 = 2039
@@ -288,11 +310,11 @@ if __name__ == "__main__":
     #########################
     
     eof_fill_kb = 12
-
-    obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comments_by_semicolon, \
+    
+    obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comments_by_semicolon,rm_comments_by_hash, \
 	      rm_regions,add_regs,hide_func_names,hide_var_names,add_hard_funcs,add_vars,add_comm, \
 	      add_init_blocks,add_end_blocks,add_mid_blocks,add_user_funcs, \
-	      add_func_calls,hide_strings_replace,hide_strings_shuffle,hide_strings_cipher,\
+	      add_func_calls,hide_strings_replace,hide_strings_shuffle,hide_strings_cipher,hide_strings_reverse,\
 	      hide_numbers,add_directives,add_tabs,add_to_eof,hardcoded_n_funcs_min,\
 	      hardcoded_n_funcs_max,init_min_blocks,init_max_blocks,init_n_statements_min,init_n_statements_max,\
 	      init_n_guard_statements_min,init_n_guard_statements_max,init_n_else_if_min,init_n_else_if_max,\
@@ -304,4 +326,4 @@ if __name__ == "__main__":
 	      mid_case_values_max,func_n_functions_min,func_n_functions_max,func_arity_min,func_arity_max,\
 	      func_n_statements_min,func_n_statements_max,func_n_guard_statements_min,func_n_guard_statements_max,\
 	      func_n_else_if_min,func_n_else_if_max,func_deep_max,func_case_values_min,func_case_values_max,\
-	      hide_numbers_deep_max_min,hide_numbers_deep_max_max,eof_fill_kb)
+	      hide_numbers_deep_max_min,hide_numbers_deep_max_max,eof_fill_kb,hide_strings_reverse)

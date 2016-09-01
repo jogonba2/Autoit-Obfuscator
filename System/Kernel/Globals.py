@@ -11,3 +11,5 @@ global defined_new_variables
 defined_new_variables = []
 global directories_files
 directories_files     = {}
+global string_modifier_function
+string_modifier_function = ""

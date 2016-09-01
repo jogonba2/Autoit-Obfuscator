@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from re import match,findall,compile,search
+## ARREGLAR --> OCURRENCIAS EXACTAS DE LAS PALABRAS CON REGEXP ##
 
 ## IF ##
 def is_if(line): return 1 if "If" in line else 0
@@ -47,9 +48,12 @@ def is_end_func(line): return 1 if "EndFunc" in line else 0
 
 ## COMMENTS ##
 def extract_comments_by_semicolon(line): return findall(r";[^\n]*","",line)
+def extract_comments_by_comments_tag(line): return findall(r"#comments-start.*#comments-end[^\n]*","",line)
+def extract_comments_by_c_tag(line): return findall(r"#cs.*#ce[^\n]*","",line)
 ##############
 
 ## VARIABLES ##
+def extract_variables(line): return findall("(\$\w*)",line)
 def extract_variables_from_obj(obj):
     identifiers = set()
     for line in obj: identifiers = identifiers.union(set(extract_variables(line)))
@@ -57,6 +61,7 @@ def extract_variables_from_obj(obj):
 #################
 
 ## FUNC NAMES ##
+def extract_func_names(line): return findall(".*Func (\w*).*",line)
 def extract_func_names_from_obj(obj): 
     identifiers = set()
     for line in obj: identifiers = identifiers.union(set(extract_func_names(line)))
@@ -64,16 +69,19 @@ def extract_func_names_from_obj(obj):
 ################
 
 ## STRING DEFINITIONS ##
-
+def extract_string_definition(line): return findall("(.*\$\w*)\s*=\s*[\"\'](.*)[\"\']",line)
+def extract_string(line): return findall("[\"\'][^\"\']*[\"\']",line)
 ########################
 
 ## VALUES ##
 def extract_integer(line): return findall("\s+([-]?\d+)+",line)
-
+def extract_float(line):   return findall(" ([-]?\d+\.\d+) ",line)
+def extract_relational_operators(line): return findall("(<=|>=|=|<>|>|<)",line)
 ############
 
 ## FILES INCLUDED ##
 def extract_includes(line):
     p = compile('#include ["<][aA-zZ]+[0-9]*\.au3[">]')
-    if p.search(line) is not None: pass
+    if p.search(line) is not None:
+        return p.search(line).group().replace("#include ", "").replace('"', "").replace("<","").replace(">","")
 ####################

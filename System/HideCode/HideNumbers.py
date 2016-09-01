@@ -28,8 +28,23 @@ def hide_number(n,deep,deep_max=3,lower_bound=-10000,upper_bound=10000):
 def hide_numbers(obj,deep_max_min=3,deep_max_max=5,lower_bound=-10000,upper_bound=10000):
     deep_max = randint(min(deep_max_min,deep_max_max),max(deep_max_min,deep_max_max))
     for i in xrange(len(obj)):
+	#floats   = ExtractKeywords.extract_float(obj[i]) 
 	integers = ExtractKeywords.extract_integer(obj[i])
+	#for j in xrange(len(floats)): obj[i] = obj[i].replace(floats[j],hide_number(float(floats[j]),0,deep_max,lower_bound,upper_bound))
 	for j in xrange(len(integers)): 
 	    if int(integers[j])!=0: 
 		obj[i] = obj[i].replace(" "+integers[j]+"\n"," "+hide_number(int(integers[j]),0,deep_max,lower_bound,upper_bound)+"\n")
     return obj
+	
+if __name__ == "__main__":
+    obfs = hide_number(78.764,0)
+    print obfs
+    print eval(obfs) #
+    """
+    MATH_FUNCTIONS              = [Utils.sum,Utils.sub,Utils.dot]#,Utils.div,Utils.exp]
+    INVERSE_MATH_FUNCTIONS      = [Utils.sub,Utils.sum,Utils.dot]#,Utils.div,Utils.log]
+    AUTOIT_FUNCTIONS  	        = ["+","-","*","/"]#,"Exp","Log"]
+    AUTOIT_INVERSE_FUNCTIONS    = ["-","+","/","*"]
+    BRACKETS                    = [0,0,0,0]#,1,1]
+    ARITY                       = [2,2,2,2]#,1,1]
+    """

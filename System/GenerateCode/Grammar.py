@@ -9,6 +9,12 @@ from re import findall
 
 def variable(length_min=30,length_max=50):   return "$"+"".join([choice(lowercase+uppercase) for i in xrange(randint(length_min,length_max))])
 
+def integer(min_range=-1000,max_range=1000): return str(randint(min_range,max_range))
+
+def real(min_range=-1000,max_range=1000):   return str(uniform(min_range,max_range))
+
+def string(length_min=5,length_max=10):      return '"'+variable(length_min,length_max)[1:]+'"'
+
 def ascii_char(): return "'"+choice(letters)+"'"
 
 def macro(): return choice(Config.MACROS)
@@ -26,6 +32,9 @@ def value(min_range=-1000,max_range=1000):
     elif random_value==4:    return macro()
 
 def relational_operation(): return choice([">","<",">=","<=","<>","="])
+
+def arithmetic_operation(): return choice(['+','-','*','/'])
+def arithmetic_assign():    return choice(['+=','-=','*=','/='])
 
 def logical_operation(): return choice(["And","Or"])
 
@@ -60,10 +69,13 @@ def simple_block(n_statements_min=10,n_statements_max=20): # Solo asignaciones (
     variables    = [variable() for i in xrange(n_statements)]
     values       = [value() for i in xrange(n_statements)]
     res = ""
+    for i in xrange(n_statements): 
+	res += "Local "+variables[i]+" = "+values[i]+"\n"
     for i in xrange(n_statements/2):
 	arity = randint(-1,2) # Aridades 0,1 y 2 #
 	if arity==-1:   
 	    r,rp  = randint(0,len(variables)-1),randint(0,len(variables)-1)
+	    res  += variables[r]+" "+arithmetic_assign()+" "+variables[rp]+"\n"
 	elif arity==0:  res  += choice(Config.FUNCTIONS_ZERO_ARITY) + "()\n"
 	elif arity==1:  
 	    r,rf,rp  = randint(0,len(variables)-1),randint(0,len(Config.FUNCTIONS_ONE_ARITY)-1),randint(0,len(variables)-1)
@@ -88,7 +100,9 @@ def block_if(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements
 	for i in xrange(n_else_if):	    
 	    log_statements = logical_statements(randint(min(n_guard_statements_min,n_guard_statements_max),max(n_guard_statements_min,n_guard_statements_max)))
 	    logic_variables = ExtractKeywords.extract_variables(log_statements)
-	    res += "Else \n"+block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)+"\n"
+	    for i in logic_variables: declarations += "Local "+assign_by_var_name(i)+"\n"
+	    res += "ElseIf "+log_statements+" Then\n"+block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)+"\n"
+    res += "Else \n"+block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)+"\n"
     res += "EndIf\n"
     return declarations+res
     
@@ -104,6 +118,9 @@ def block_for(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statement
 def block_while(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements_min=1,n_guard_statements_max=5,n_else_if_min=1,n_else_if_max=5,deep_max=5,case_values_min=-1000,case_values_max=1000): 
     n_guard_statements = randint(min(n_guard_statements_min,n_guard_statements_max),max(n_guard_statements_min,n_guard_statements_max))
     log_statements,declarations = logical_statements(n_guard_statements),""
+    logic_variables = ExtractKeywords.extract_variables(log_statements)
+    relational_operators = ExtractKeywords.extract_relational_operators(log_statements)
+    const_values         = ExtractKeywords.extract_integer(log_statements)
     #print logic_variables,relational_operators,const_values
     for i in logic_variables: declarations += "Local "+assign_by_var_name(i)+"\n"
     res = declarations+"\nWhile "+log_statements
@@ -117,6 +134,7 @@ def block_switch(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statem
     res = "Switch "+v+"\n" 
     for i in xrange(n_cases):
 	a,b = integer(min(case_values_min,case_values_max),max(case_values_min,case_values_max)),integer(min(case_values_min,case_values_max),max(case_values_min,case_values_max))
+	a,b = min(a,b),max(a,b)
 	res += "Case "+a+" To "+b+"\n"+block(deep_act,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)
     res += "\nEndSwitch\n"
     return declaration+res
@@ -125,7 +143,9 @@ def block_func(arity_min=1,arity_max=4,identifiers_length_min=5,identifiers_leng
     id_func,arity = Utils.generate_identifier(identifiers_length_min,identifiers_length_max),randint(min(arity_min,arity_max),max(arity_min,arity_max))
     Config.TDS_FUNCTIONS[id_func]=arity # ¿Sobra?
     res = "Func "+id_func+"("
-    for i in xrange(arity): pass
+    for i in xrange(arity):
+	if i<arity-1:  res += variable()+","
+	else:          res += variable()
     res += ")\n\n\n"+block(0,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)+"\n EndFunc\n"
     Globals.arity_new_functions.append(arity)
     return res
