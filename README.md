@@ -49,7 +49,7 @@
 * Variables declaradas con Local, Dim y Global.
 * Considerado Call en las llamadas a funciones.
 * Considerado Assign en las definiciones de variables.
-* Alterar nombres de las funciones Autoit.
+* Alterar nombres de las funciones y palabras clave de Autoit.
 * Todos los parámetros se generan de forma aleatoria entre los valores límite especificados por el usuario y las posibilidades existentes en una tarea e.g. Definir variable con Assign o sin Assign, declarar variables con Local, Dim o Global etc. Esto aumenta la dispersión y además permite incrementar la exploración del espacio de soluciones si se emplean algoritmos genéticos para optimizar los parámetros.
  
 
