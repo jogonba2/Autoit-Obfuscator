@@ -1,4 +1,4 @@
-# Autoit-Obfuscator
+# OBFAU3 (Autoit-Obfuscator)
 ## Características del proceso
 
 * Número de iteraciones del proceso de ofuscado.
