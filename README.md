@@ -5,6 +5,7 @@
 * Enlazar includes desde otros ficheros del proyecto.
 * Eliminar comentarios especificados por tags (comment-start/comment-end y cs/ce)
 * Eliminar comentarios especificados por ;
+* Eliminar comentarios especificados por #
 * Eliminar regiones (#Region)
 * Añadir nuevas regiones
 * Ocultar nombres de variables
