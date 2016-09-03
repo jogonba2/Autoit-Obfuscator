@@ -46,19 +46,32 @@
 
 * Definición de la profundidad máxima en el ofuscado de enteros.
 * Definición del tamaño en KB de la secuencia de símbolos a añadir tras el EOF.
-* Variables declaradas con Local, Dim y Global.
-* Considerado Call en las llamadas a funciones.
-* Considerado Assign en las definiciones de variables.
-* Alterar nombres de las funciones y palabras clave de Autoit.
-* Todos los parámetros se generan de forma aleatoria entre los valores límite especificados por el usuario y las posibilidades existentes en una tarea e.g. Definir variable con Assign o sin Assign, declarar variables con Local, Dim o Global etc. Esto aumenta la dispersión y además permite incrementar la exploración del espacio de soluciones si se emplean algoritmos genéticos para optimizar los parámetros.
+* Variables declaradas con Local,  Dim y Global.
+* Considerado Call en las llamadas a funciones. (Considerar que el usuario pueda desactivarlo)
+* Considerado Assign en las definiciones de variables. (Considerar que el usuario pueda desactivarlo)
+* Considerado Eval. (Considerar que el usuario pueda desactivarlo)
+* Alterar nombres de las funciones y palabras clave de AutoIt (Considerar que el usuario pueda desactivarlo)
+* Posibilidad de combinar los métodos de ofuscado de strings disponibles.
+* Implementado operador ternario (parece funcionar solo con algunas versiones de AutoIt, dar posibilidad de activarlo)
+* Todos los parámetros de los procesos son elegidos de forma aleatoria entre los valores límite especificados por el usuario (incrementa la dispersión y permite incrementar la exploración del espacio de soluciones si se emplean algoritmos genéticos para optimizar los parámetros).
+
  
 
 ## Futuras versiones
 
 * Algoritmo genético para optimizar los parámetros del proceso.
-* GUI (sadfud)
+* GUI (Sadfud y Blau)
+* Compilar automáticamente con Aut2Exe y variar sus parámetros (compresión,  iconos,  ...)
+* Añadir soporte de bloques While y Do Until.
+* Considerar arrays.
+* Considerar constantes y enumeraciones (const y enum). (Reparando bugs)
+* Añadir expresiones lógicas siempre ciertas en el código ya existente
+* Añadir más macros y funciones de autoit con más aridades.
+* Considerar objetos.
+* Considerar declaraciones relacionadas con objetos (With y For Inf)
+* Añadir más funciones hardcodeadas.
+* Añadir más métodos de ofuscado de strings.
+* Parametrizar el script principal.
 * Reordenación de código (tengo planteado algo usando grafos para tener en cuenta las dependencias).
-* Arreglar problemas con algunos scripts.
-* Implementar el cifrado de strings.
-* Dar la posibilidad de especificar más parámetros como el tamaño de los identificadores generados (esto se considera en las funciones implementadas pero no se deja al usuario especificarlo, puede reducir considerablemente el tamaño del código).
+* Dar la posibilidad de especificar más parámetros como el tamaño de los identificadores generados (esto se considera en las funciones implementadas pero no se deja al usuario especificarlo,   puede reducir considerablemente el tamaño del código).
 * Hardcodear instancias simples de problemas NP.
