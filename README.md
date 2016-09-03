@@ -75,3 +75,19 @@
 * Reordenación de código (tengo planteado algo usando grafos para tener en cuenta las dependencias).
 * Dar la posibilidad de especificar más parámetros como el tamaño de los identificadores generados (esto se considera en las funciones implementadas pero no se deja al usuario especificarlo,   puede reducir considerablemente el tamaño del código).
 * Hardcodear instancias simples de problemas NP.
+
+Errores conocidos:
+
+* Duplicate name (function) -> 
+    * Problema: Repetición del nombre de alguna función.
+    * Solución: Volver a ejecutar el ofuscador.
+    
+* Error in expresion        -> 
+    * Problema: Error en algún Switch generado
+    * Solución: Volver a ejecutar el ofuscador.
+    
+* Error subscripted array   -> 
+    * Problema: Error general, fuente desconocida.
+    * Solución: Volver a ejecutar el ofuscador, error general, fuente desconocida.
+
+* Ante cualquier otro error, volver a ofuscar y si se soluciona (o no), comentad en Issues.
