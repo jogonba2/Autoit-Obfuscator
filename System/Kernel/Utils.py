@@ -73,7 +73,7 @@ def generate_random_string(length_min=5,length_max=10,ext=".exe"): return "".joi
 
 def generate_random_key(B): return "".join([choice(lowercase+uppercase) for i in xrange(B)])
 
-def generate_random_declarator(): return choice(["Dim ","Local ","Global "])
+def generate_random_declarator(): return choice([low_up_string("Dim "),low_up_string("Local "),low_up_string("Global ")])
 
 def low_up_string(s):
     res = ""
@@ -82,7 +82,15 @@ def low_up_string(s):
 	if rnd==0: res += s[i].lower()
 	else:      res += s[i].upper()
     return res
-    
+
+def add_random_char_between_string(s,c):
+    r = ""
+    for i in xrange(len(s)):
+	rnd = randint(0,1)
+	if rnd==1: r += s[i]+c
+	else:      r += s[i]
+    return r
+	
 def sum(a,b): return a+b
 #def sub(a,b): return a-b
 def dot(a,b): return a*b
@@ -91,7 +99,7 @@ def exp(a): return e**a
 def log(a): return log(a)
 
 if __name__ == "__main__":
-    print generate_random_string(ext="")
+    print add_random_char_between_string("holaamigo","s")
     #a = extract_code("test.au3")
     #a = get_string_from_code(a)
     #a = remove_comments(a)

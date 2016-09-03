@@ -54,6 +54,7 @@ def extract_comments_by_c_tag(line): return findall(r"#cs.*#ce[^\n]*","",line)
 
 ## VARIABLES ##
 def extract_variables(line): return findall("(\$\w*)",line)
+    
 def extract_variables_from_obj(obj):
     identifiers = set()
     for line in obj: identifiers = identifiers.union(set(extract_variables(line)))

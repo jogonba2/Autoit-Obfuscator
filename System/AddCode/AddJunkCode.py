@@ -140,7 +140,6 @@ def add_hardcoded_funcs(obj,functions=Globals.defined_new_functions,arity=Global
 
 def add_hardcoded_string_modifiers(obj,hardcoded_function):
     obj.insert(0,hardcoded_function()+"\n\n")
-    Globals.string_modifier_function = Globals.defined_new_functions[0]
     return obj
 
 if __name__ == "__main__":

@@ -149,8 +149,7 @@ EndFunc \n\n"""
 
 def reverse_string(length_min=10,length_max=15):
     identifier = Utils.generate_identifier(length_min,length_max)
-    Globals.defined_new_functions.append(identifier)
-    Globals.arity_new_functions.append(1)
+    Globals.string_reverse_function = identifier
     return """Func """+identifier+"""($sText )
 		Local $Result , $i , $sParams
 		$sParams = StringLen($sText)
@@ -166,15 +165,32 @@ def decode_xor(length_min=5,length_max=10): pass
 
 def replace_string(length_min=10,length_max=15):
     identifier = Utils.generate_identifier(length_min,length_max)
-    Globals.defined_new_functions.append(identifier)
-    Globals.arity_new_functions.append(1)
+    Globals.string_replace_function = identifier
     return """Func """+identifier+"""($sText,$symbol)
 		$Result = StringReplace($sText,$symbol,'')
 		Return $Result
 	      EndFunc
 	   """
 	   
-HARDCODED_STRING_MODIFIERS = [replace_string,reverse_string]
+def flip_two_string(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.string_flip_two_function = identifier
+    return """Func """+identifier+"""($sText)
+		Local $Result , $i , $sParams
+		$Result  = ""
+		$i       = 1
+		While $i < StringLen($sText)
+		    $Result &= StringMid($sText,$i+1,1) & StringMid($sText,$i,1)
+		    $i = $i+2
+		WEnd
+		If Mod(StringLen($sText),2)<>0 Then
+		    $Result &= StringRight($sText,1)
+		EndIf
+		Return $Result
+	      EndFunc
+	   """
+
+HARDCODED_STRING_MODIFIERS = [flip_two_string,replace_string,reverse_string]
 
 HARDCODED_PROGRAMS = [hex_to_string,string_repeat,string_to_hex,string_shuffle,
 		      log_change_base,is_prime,string_dump,random_autoit,name_count]
