@@ -48,12 +48,24 @@ def is_end_func(line): return 1 if "EndFunc" in line else 0
 
 ## COMMENTS ##
 def extract_comments_by_semicolon(line): return findall(r";[^\n]*","",line)
+
 def extract_comments_by_comments_tag(line): return findall(r"#comments-start.*#comments-end[^\n]*","",line)
+
 def extract_comments_by_c_tag(line): return findall(r"#cs.*#ce[^\n]*","",line)
 ##############
 
 ## VARIABLES ##
 def extract_variables(line): return findall("(\$\w*)",line)
+
+def extract_defined_variables(line):
+    aux = line.strip().title()
+    if aux.find("Local")==0 or aux.find("Dim")==0 or aux.find("Global")==0: return findall("(\$\w*)",line)
+    else: return []
+    
+def extract_defined_variables_from_obj(obj):
+    identifiers = set()
+    for line in obj:identifiers = identifiers.union(set(extract_defined_variables(line)))
+    return identifiers
     
 def extract_variables_from_obj(obj):
     identifiers = set()
@@ -63,6 +75,7 @@ def extract_variables_from_obj(obj):
 
 ## FUNC NAMES ##
 def extract_func_names(line): return findall(".*Func (\w*).*",line)
+
 def extract_func_names_from_obj(obj): 
     identifiers = set()
     for line in obj: identifiers = identifiers.union(set(extract_func_names(line)))
@@ -71,13 +84,18 @@ def extract_func_names_from_obj(obj):
 
 ## STRING DEFINITIONS ##
 def extract_string_definition(line): return findall("(.*\$\w*)\s*=\s*[\"\'](.*)[\"\']",line)
+
 def extract_string(line): return findall("[\"\'][^\"\']*[\"\']",line)
+
 ########################
 
 ## VALUES ##
 def extract_integer(line): return findall("\s+([-]?\d+)+",line)
+
 def extract_float(line):   return findall(" ([-]?\d+\.\d+) ",line)
+
 def extract_relational_operators(line): return findall("(<=|>=|=|<>|>|<)",line)
+
 ############
 
 ## FILES INCLUDED ##

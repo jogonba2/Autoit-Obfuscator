@@ -55,7 +55,7 @@ def ternary_operation(n_guard_statements_min=1,n_guard_statements_max=3):
     
 # Permitir usar los parámetros #
 def value(min_range=-1000,max_range=1000):
-    # 0 -> integer, 1-> char , 2 -> string , 3 -> float, 4 -> macro#
+    # 0 -> integer, 1-> char , 2 -> string , 3 -> float, 4 -> macro #
     random_value = randint(0,4)#,2)
     rnd_eval     = randint(0,1)
     if random_value==0:      
@@ -104,11 +104,15 @@ def block(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements_mi
     res = ""
     if deep_act>=deep_max: res += simple_block(n_statements_min,n_statements_max)+"\n"
     else:
-	block_type = randint(0,3)# 0->simple,1->if,2->for,3->switch,4->while #
+	block_type = randint(0,7)# 0->simple,1->if,2->for,3->switch,4->for object,5->with,6->while,7->do until #
 	if block_type==0:   res += simple_block(n_statements_min,n_statements_max)+"\n"
 	elif block_type==1: res += block_if(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)
 	elif block_type==2: res += block_for(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)
 	elif block_type==3: res += block_switch(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)
+	elif block_type==4: res += block_for_object(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)
+	elif block_type==5: res += block_with(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)
+	elif block_type==6: res += block_while(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)
+	elif block_type==7: res += block_do_until(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)
     return res
     
 def simple_block(n_statements_min=10,n_statements_max=20): 
@@ -139,6 +143,54 @@ def simple_block(n_statements_min=10,n_statements_max=20):
 	    r,rf,rp,rt = randint(0,len(variables)-1),randint(0,len(Config.FUNCTIONS_TWO_ARITY)-1),randint(0,len(variables)-1),randint(0,len(variables)-1)
 	    res  += variables[r]+" "+arithmetic_assign()+" "+Utils.low_up_string(Config.FUNCTIONS_TWO_ARITY[rf])+"("+variables[rp]+","+variables[rt]+")\n"
     return res
+
+def block_do_until(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements_min=1,n_guard_statements_max=5,n_else_if_min=1,n_else_if_max=5,deep_max=5,case_values_min=-1000,case_values_max=1000): 
+    # Generalizar bucles do ... until con más de una condición en la guarda, incrementos variables y variabilidad en la actualización de variables (incrementar parte derecha = decrementar parte izquierda) #
+    var_one,val_one = variable(),integer()
+    var_two,val_two = variable(),integer()
+    declarations    = Utils.generate_random_declarator() + var_one + " = " + val_one + "\n" +\
+		      Utils.generate_random_declarator() + var_two + " = " + val_two + "\n"
+    rel_op          = choice([">","<",">=","<=","<>"])
+    res             = Utils.low_up_string(" Do \n") + \
+		      block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,
+			    n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,
+			    case_values_max)+"\n"
+    if   rel_op == ">":   	res        += var_one + " += 1\n"
+    elif rel_op == "<":  	res        += var_one + " -= 1\n"
+    elif rel_op == ">=":  	res        += var_one + " += 1\n"
+    elif rel_op == "<=":  	res        += var_one + " -= 1\n"
+    elif rel_op == "<>":  	res        += var_one + " += 1\n"
+    elif rel_op == "=": 
+	v_max = max(val_one,val_two)
+	if v_max == val_one:    res += var_one + " -= 1\n"
+	else:                   res += var_two + " -= 1\n"
+    res            += Utils.low_up_string(" Until ") + var_one + rel_op + var_two + "\n"
+    return declarations+res
+	
+def block_while(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements_min=1,n_guard_statements_max=5,n_else_if_min=1,n_else_if_max=5,deep_max=5,case_values_min=-1000,case_values_max=1000): 
+    # Generalizar bucles while con más de una condición en la guarda, incrementos variables y variabilidad en la actualización de variables (incrementar parte derecha = decrementar parte izquierda) #
+    var_one,val_one = variable(),integer()
+    var_two,val_two = variable(),integer()
+    declarations    = Utils.generate_random_declarator() + var_one + " = " + val_one + "\n" +\
+		      Utils.generate_random_declarator() + var_two + " = " + val_two + "\n"
+    rel_op          = choice([">","<",">=","<=","="])#relational_operation()
+    res             = Utils.low_up_string(" While ")+var_one+rel_op+var_two+"\n"+ \
+		      block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,
+			    n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,
+			    case_values_max)+"\n"
+			    
+    if   rel_op == ">":   	res        += var_one + " -= 1\n"
+    elif rel_op == "<":  	res        += var_one + " += 1\n"
+    elif rel_op == ">=":  	res        += var_one + " -= 1\n"
+    elif rel_op == "<=":  	res        += var_one + " += 1\n"
+    elif rel_op == "=":   	res        += var_one + " += 1\n"
+    elif rel_op == "<>": 
+	v_max = max(val_one,val_two)
+	if v_max == val_one:    res += var_one + " -= 1\n"
+	else:                   res += var_two + " -= 1\n"
+    res += Utils.low_up_string("\nWEnd\n")
+    return declarations+res 
+    
     
 def block_if(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements_min=1,n_guard_statements_max=5,n_else_if_min=1,n_else_if_max=5,deep_max=5,case_values_min=-1000,case_values_max=1000): 
     res = Utils.low_up_string("If ")
@@ -160,25 +212,40 @@ def block_if(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements
     res += Utils.low_up_string("Else ")+"\n"+block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)+"\n"
     res += Utils.low_up_string("EndIf")+"\n"
     return declarations+res
-    
+
 def block_for(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements_min=1,n_guard_statements_max=5,n_else_if_min=1,n_else_if_max=5,deep_max=5,case_values_min=-1000,case_values_max=1000): 
     a,b = integer(),integer()
     a,b = min(a,b),max(a,b)
     v   = variable()
     declaration = Utils.generate_random_declarator()+assign_by_var_name(v)+"\n\n"
-    res = Utils.low_up_string("For ")+assign_full(v,a)+Utils.low_up_string(" To ")+b+"\n"+block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,case_values_max)+Utils.low_up_string("\n Next\n")
+    res = Utils.low_up_string("For ")+assign_full(v,a)+Utils.low_up_string(" To ")+b
+    rnd_step = randint(0,1)
+    if rnd_step==1:    
+	res += Utils.low_up_string(" Step ")+str(randint(1,10))+" \n"
+    else:              res += "\n"
+    res += block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,
+	         n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,
+	         case_values_max)+Utils.low_up_string("\n Next\n")
     return declaration+res
 
-
-def block_while(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements_min=1,n_guard_statements_max=5,n_else_if_min=1,n_else_if_max=5,deep_max=5,case_values_min=-1000,case_values_max=1000): 
-    n_guard_statements = randint(min(n_guard_statements_min,n_guard_statements_max),max(n_guard_statements_min,n_guard_statements_max))
-    log_statements,declarations = logical_statements(n_guard_statements),""
-    logic_variables = ExtractKeywords.extract_variables(log_statements)
-    relational_operators = ExtractKeywords.extract_relational_operators(log_statements)
-    const_values         = ExtractKeywords.extract_integer(log_statements)
-    for i in logic_variables: declarations += Utils.generate_random_declarator()+assign_by_var_name(i)+"\n"
-    res = declarations+Utils.low_up_string("\nWhile ")+log_statements
-    return res # Acabar #
+def block_with(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements_min=1,n_guard_statements_max=5,n_else_if_min=1,n_else_if_max=5,deep_max=5,case_values_min=-1000,case_values_max=1000):
+    v           = variable()
+    declaration = Utils.generate_random_declarator()+v+' = ObjCreate("shell.application") \n'
+    res 	= Utils.low_up_string(" With ") + v + "\n" + \
+		  block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,
+			n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,
+			case_values_max)+Utils.low_up_string("\n EndWith\n")
+    return declaration+res
+    
+def block_for_object(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements_min=1,n_guard_statements_max=5,n_else_if_min=1,n_else_if_max=5,deep_max=5,case_values_min=-1000,case_values_max=1000): 
+    v     	= variable()
+    v_for 	= variable() 
+    declaration = Utils.generate_random_declarator()+v+' = ObjCreate("shell.application") \n'
+    res 	= Utils.low_up_string("For ") + v_for+Utils.low_up_string(" In ") + v + "\n" + \
+		  block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,
+			n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,
+			case_values_max)+Utils.low_up_string("\n Next\n")
+    return declaration+res
     
 def block_switch(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements_min=1,n_guard_statements_max=5,n_else_if_min=1,n_else_if_max=5,deep_max=5,case_values_min=-1000,case_values_max=1000): 
     v = variable()
@@ -205,5 +272,4 @@ def block_func(arity_min=1,arity_max=4,identifiers_length_min=5,identifiers_leng
     return res
 
 if __name__ == "__main__":
-    print logical_statements(3)
-	
+    print block_for(1,deep_max=1)

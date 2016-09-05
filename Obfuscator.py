@@ -16,7 +16,7 @@ def footer(): print "\n\n"+"-"*25," Overxfl0w13 ","-"*25,"\n"
 def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comments_by_semicolon, rm_comments_by_hash, \
 	      rm_regions,add_regs,hide_func_names,hide_var_names,add_hard_funcs,add_vars,add_comm, \
 	      add_init_blocks,add_end_blocks,add_mid_blocks,add_user_funcs, \
-	      add_func_calls,hide_strings_replace,hide_strings_shuffle,hide_strings_flip_two,hide_strings_reverse, \
+	      add_func_calls,hide_strings_replace,hide_strings_shuffle,hide_strings_flip_two,hide_strings_reverse, hide_strings_split, \
 	      hide_numbers,add_directives,add_tabs,add_to_eof,hardcoded_n_funcs_min,\
 	      hardcoded_n_funcs_max,init_min_blocks,init_max_blocks,init_n_statements_min,init_n_statements_max,\
 	      init_n_guard_statements_min,init_n_guard_statements_max,init_n_else_if_min,init_n_else_if_max,\
@@ -148,7 +148,11 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 	    if add_func_calls:
 		print Messages.adding_function_calls
 		obj  = AddJunkCode.add_function_calls(obj)
-	       
+	    
+	    if hide_strings_split:
+		print "Hide strings with split method..."
+		obj  = HideStrings.hide_strings_split(obj)
+		
 	    if hide_strings_flip_two:
 		print "Hide strings with two flip method..."
 		obj  = HideStrings.hide_strings_flip_two(obj)
@@ -208,11 +212,11 @@ if __name__ == "__main__":
     rm_comments_by_tag = False
     rm_comments_by_semicolon = False
     rm_comments_by_hash      =  False # Hasta que se repare"
-    rm_regions = False
-    add_regs   = False
-    hide_func_names = False
+    rm_regions = True
+    add_regs   = True
+    hide_func_names = True
     hide_var_names = True
-    add_hard_funcs = False
+    add_hard_funcs = True
     add_vars = True
     add_comm = True
     add_init_blocks = True
@@ -224,8 +228,9 @@ if __name__ == "__main__":
     hide_strings_shuffle       = False
     hide_strings_flip_two      = True
     hide_strings_reverse       = True
+    hide_strings_split         = True
     hide_numbers         = True
-    add_directives       = True
+    add_directives       = False
     add_tabs             = False
     add_to_eof           = False
     
@@ -309,6 +314,12 @@ if __name__ == "__main__":
     hide_numbers_deep_max_max 	 = 5
     
     #########################
+    ## Hide strings params ##
+    #########################
+    
+    hide_strings_split_chunk_splits = 3
+    
+    #########################
     ##     EOF params      ##
     #########################
     
@@ -317,7 +328,7 @@ if __name__ == "__main__":
     obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comments_by_semicolon, rm_comments_by_hash, \
 	      rm_regions,add_regs,hide_func_names,hide_var_names,add_hard_funcs,add_vars,add_comm, \
 	      add_init_blocks,add_end_blocks,add_mid_blocks,add_user_funcs, \
-	      add_func_calls,hide_strings_replace,hide_strings_shuffle,hide_strings_flip_two,hide_strings_reverse, \
+	      add_func_calls,hide_strings_replace,hide_strings_shuffle,hide_strings_flip_two,hide_strings_reverse, hide_strings_split, \
 	      hide_numbers,add_directives,add_tabs,add_to_eof,hardcoded_n_funcs_min,\
 	      hardcoded_n_funcs_max,init_min_blocks,init_max_blocks,init_n_statements_min,init_n_statements_max,\
 	      init_n_guard_statements_min,init_n_guard_statements_max,init_n_else_if_min,init_n_else_if_max,\

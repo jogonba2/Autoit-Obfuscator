@@ -7,7 +7,7 @@ from Kernel import ExtractKeywords as ex
 
 
 def hide_variable_names(obj):
-    identifiers = list(ex.extract_variables_from_obj(obj))
+    identifiers = list(ex.extract_defined_variables_from_obj(obj)) # Extraer solo las que se definen en el script #
     replaces = Utils.mod_names_hash(identifiers)
     for i in xrange(len(obj)):
 	for j in xrange(len(identifiers)): obj[i] = obj[i].replace(identifiers[j],"$"+replaces[j]) if not not identifiers[j] else obj[i]
