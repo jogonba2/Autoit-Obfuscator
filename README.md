@@ -62,13 +62,8 @@
 * Algoritmo genético para optimizar los parámetros del proceso.
 * GUI (Sadfud y Blau)
 * Compilar automáticamente con Aut2Exe y variar sus parámetros (compresión,  iconos,  ...)
-* Añadir soporte de bloques While y Do Until.
 * Considerar arrays.
 * Considerar constantes y enumeraciones (const y enum). (Reparando bugs)
-* Añadir expresiones lógicas siempre ciertas en el código ya existente
-* Añadir más macros y funciones de autoit con más aridades.
-* Considerar objetos.
-* Considerar declaraciones relacionadas con objetos (With y For Inf)
 * Añadir más funciones hardcodeadas.
 * Añadir más métodos de ofuscado de strings.
 * Parametrizar el script principal.
@@ -115,3 +110,20 @@
 * Añadidas cuatro funciones hardcodeadas.
 * Añadido método para split para ofuscar strings.
 * Actualizada la lista de errores y soluciones.
+
+## Changelog 2
+
+* Añadidas condiciones siempre ciertas en el código inicial.
+* Expresiones regulares precompiladas.
+* Añadidas más funciones hardcodeadas.
+* Añadido método rotate para ofuscado de strings.
+* Arreglado bug en hide var names.
+* Arreglado bug en hide func names.
+* Arreglado bug en true guard statements.
+* Arreglado Error in expresion.
+* Arreglado Only Object-type variables allowed in a "With" statement.
+* Arreglado Variable must be of type "Object".
+* Detectada la fuente de subscripted array (alguna de las funciones hardcodeadas).
+* Mejorada la estabilidad.
+
+
