@@ -2,18 +2,25 @@
 # -*- coding: utf-8 -*-
 
 from re import match,findall,compile,search
-## ARREGLAR --> OCURRENCIAS EXACTAS DE LAS PALABRAS CON REGEXP ##
 
+## GENERAL ##
+def is_keyword_block(line,key):
+    line = line.strip()
+    aux = line.lower()
+    if  aux.find(key)==0:  return True
+    else:                  return False
+
+#############
 ## IF ##
-def is_if(line): return 1 if "If" in line else 0
-def is_else_if(line): return 1 if "ElseIf" in line else 0
+def is_if(line): return is_keyword_block(line,"if")
+def is_else_if(line): return is_keyword_block(line,"elseif")
 def is_else(line): return 1 if "Else" in line else 0
 def is_end_if(line): return 1 if "EndIf" in line else 0
 ########
 
 ## SELECT && SWITCH ##
 def is_select(line): return 1 if "Select" in line else 0
-def is_case(line): return 1 if "Case" in line else 0
+def is_case(line): return is_keyword_block(line,"case")
 def is_case_else(line): return 1 if match(".*Case.*Else",line) else 0
 def is_end_select(line): return 1 if "EndSelect" in line else 0
 def is_switch(line): return 1 if "Switch" in line else 0
@@ -27,13 +34,13 @@ def is_next(line): return 1 if "Next" in line else 0
 ###############
 
 ## WHILE LOOPS ##
-def is_while(line): return 1 if "While" in line else 0
+def is_while(line): return is_keyword_block(line,"while")
 def is_end_while(line): return 1 if "WEnd" in line else 0
 #################
 
 ## DO WHILE LOOPS ##
 def is_do_while(line): return 1 if "Do" in line else 0
-def is_until(line): return 1 if "Until" in line else 0
+def is_until(line): return is_keyword_block(line,"until")
 ####################
 
 ## WITH ##
@@ -55,11 +62,12 @@ def extract_comments_by_c_tag(line): return findall(r"#cs.*#ce[^\n]*","",line)
 ##############
 
 ## VARIABLES ##
+
 def extract_variables(line): return findall("(\$\w*)",line)
 
 def extract_defined_variables(line):
     aux = line.strip().title()
-    if aux.find("Local")==0 or aux.find("Dim")==0 or aux.find("Global")==0: return findall("(\$\w*)",line)
+    if aux.find("Local")==0 or aux.find("Dim")==0 or aux.find("Global")==0: return findall(r"(\$\w*)",line)
     else: return []
     
 def extract_defined_variables_from_obj(obj):
@@ -85,6 +93,7 @@ def extract_func_names_from_obj(obj):
 ## STRING DEFINITIONS ##
 def extract_string_definition(line): return findall("(.*\$\w*)\s*=\s*[\"\'](.*)[\"\']",line)
 
+# "[\"\'][^\"\']*[\"\']" #
 def extract_string(line): return findall("[\"\'][^\"\']*[\"\']",line)
 
 ########################
@@ -98,9 +107,20 @@ def extract_relational_operators(line): return findall("(<=|>=|=|<>|>|<)",line)
 
 ############
 
+## RELATIONAL EXPRESSIONS #
+
+def extract_relational_expressions(line):
+    pass
+    
+###########################
+
 ## FILES INCLUDED ##
 def extract_includes(line):
     p = compile('#include ["<][aA-zZ]+[0-9]*\.au3[">]')
     if p.search(line) is not None:
         return p.search(line).group().replace("#include ", "").replace('"', "").replace("<","").replace(">","")
 ####################
+
+if __name__ == "__main__":
+    s = "Local $sFileExe = FileGetShortName($sFileToRun & ' /AutoIt3ExecuteScript "' & $sPluguinAudio & '"')"
+    print extract_string(s)

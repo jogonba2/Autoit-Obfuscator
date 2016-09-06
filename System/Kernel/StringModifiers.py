@@ -3,6 +3,10 @@
 
 from random import randint
 
+def rotate_string(s):
+    rnd = randint(0,len(s)-1)
+    return (s[rnd:]+s[:rnd],rnd)
+    
 def flip_two_modifier(s):
     r,i = "",0
     while i<len(s)-1:
@@ -30,4 +34,6 @@ def split_string(s,chunk_size=3):
 	if i<len(chunks)-1: r += " & "
     return r
 
-print split_string('"\Audio.au3"',3)
+if __name__ == "__main__":
+    print rotate_string("abcdef ghijkl mnopqr stuvwx")
+

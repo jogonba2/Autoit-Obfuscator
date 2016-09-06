@@ -75,6 +75,39 @@ def generate_random_key(B): return "".join([choice(lowercase+uppercase) for i in
 
 def generate_random_declarator(): return choice([low_up_string("Dim "),low_up_string("Local "),low_up_string("Global ")])
 
+def generate_true_statement(n_min_value=100,n_max_value=300):
+    statement = choice(["=","<=",">=","<",">","<>"])
+    n_min_value,n_max_value = min(n_min_value,n_max_value),max(n_min_value,n_max_value)
+    if statement == "=": 
+	rnd = str(randint(n_min_value,n_max_value))
+	return  rnd + " " + statement + " " + rnd
+	
+    elif statement == "<=":
+	rnd_left   = randint(n_min_value,n_max_value)
+	rnd_right  = randint(rnd_left,n_max_value)+1 # +1 para cubrirme, rnd_left también valdría #
+	return  str(rnd_left) + " " + statement + " " + str(rnd_right)
+	
+    elif statement == ">=":
+	rnd_left   = randint(n_min_value,n_max_value)
+	rnd_right  = randint(n_min_value,rnd_left)-1 # Lo mismo con -1 #
+	return  str(rnd_left) + " " + statement + " " + str(rnd_right)
+    
+    elif statement == "<":
+	rnd_left   = randint(n_min_value,n_max_value)
+	rnd_right  = randint(rnd_left,n_max_value)+1
+	return  str(rnd_left) + " " + statement + " " + str(rnd_right)
+	
+    elif statement == ">":
+	rnd_left   = randint(n_min_value,n_max_value)
+	rnd_right  = randint(n_min_value,rnd_left)-1
+	return  str(rnd_left) + " " + statement + " " + str(rnd_right)
+	
+    elif statement == "<>":
+	rnd_left   = randint(n_min_value,n_max_value)
+	rnd_right  = rnd_left
+	while rnd_right==rnd_left: rnd_right = randint(n_min_value,n_max_value)
+	return  str(rnd_left) + " " + statement + " " + str(rnd_right)
+	
 def low_up_string(s):
     res = ""
     for i in xrange(len(s)):
@@ -99,7 +132,9 @@ def exp(a): return e**a
 def log(a): return log(a)
 
 if __name__ == "__main__":
-    print add_random_char_between_string("holaamigo","s")
+    #for i in xrange(1000000):
+    #	print eval(generate_true_statement(5,10))
+    #print add_random_char_between_string("holaamigo","s")
     #a = extract_code("test.au3")
     #a = get_string_from_code(a)
     #a = remove_comments(a)

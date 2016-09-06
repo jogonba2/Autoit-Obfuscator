@@ -17,6 +17,18 @@ $s = StringFromASCIIArray($s)
 -> Falta generar codigo para cifrar -> C.decrypt(C.encrypt($s)) 
 """
 
+def hide_strings_rotate(obj):
+    for i in xrange(len(obj)):
+	v = ex.extract_string(obj[i])
+	aux = obj[i].strip()
+	if len(aux)>0 and aux[0]!="#" and not "RegExp" in aux:
+	    for j in xrange(len(v)):
+		v[j]   = v[j][1:-1] # !Comillas! -> puede bugear esto, probar a dejarlas 
+		if len(v[j])>2:
+		    params = StringModifiers.rotate_string(v[j])
+		    obj[i] = obj[i].replace('"'+v[j]+'"',Globals.string_rotate_function+"('"+params[0]+"',"+str(params[1])+") ")
+    return obj
+    
 def hide_strings_split(obj):
     for i in xrange(len(obj)):
 	v = ex.extract_string(obj[i])
@@ -90,7 +102,6 @@ def hide_strings_reverse(obj):
     return obj
     
 if __name__ == "__main__":
-    obj = Utils.extract_code("test.au3")
-    obj = hide_strings_definition(obj)
-    Utils.write_code(Utils.get_string_from_obj(obj),"testmod.au3")
+    obj = ["Local $sFileExe = FileGetShortName($sFileToRun & ' /AutoIt3ExecuteScript "' & $sPluguinAudio & '"')"]
+    print hide_strings_split(obj)
     #print generate_graph(obj)

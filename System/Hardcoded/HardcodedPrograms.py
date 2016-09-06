@@ -33,7 +33,7 @@ def string_repeat(length_min=10,length_max=15):
 		$iRepeatCount = BitShift($iRepeatCount, 1)
 	WEnd
 	Return $sString & $sResult
-EndFunc  \n\n ;==>_StringRepeat """
+EndFunc  \n\n"""
 
 def string_to_hex(length_min=10,length_max=15):
     identifier = Utils.generate_identifier(length_min,length_max)
@@ -41,7 +41,7 @@ def string_to_hex(length_min=10,length_max=15):
     Globals.arity_new_functions.append(1)
     return """Func """+identifier+"""($sString)
 	Return Hex(StringToBinary($sString))
-EndFunc   ;==>_StringToHex \n\n
+EndFunc   \n\n
 """
 
 def string_shuffle(length_min=10,length_max=15):
@@ -109,7 +109,7 @@ EndFunc \n\n"""
 def random_autoit(length_min=10,length_max=15):
     identifier = Utils.generate_identifier(length_min,length_max)
     Globals.defined_new_functions.append(identifier)
-    Globals.arity_new_functions.append(2)
+    Globals.arity_new_functions.append(3)
     return """Func """+identifier+"""($nNum1 = 0, $nNum2 = 0, $iFlag = 0)
     If Not IsNumber($nNum1) Then Return SetError(1, 0, 0) ; Invalid 1st parameter
     Switch @NumParams
@@ -262,6 +262,81 @@ def base_128_decode(length_min=10,length_max=15):
 
 EndFunc \n\n"""
 
+def password_crypt(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(3)
+    return """Func """+identifier+"""($sPassword, $sFilePath, $iOverwrite = 0) ; By guinness, idea by Valuater.
+    If FileExists($sFilePath) And $iOverwrite = 0 Then
+        Return BinaryToString(_Crypt_DecryptData(IniRead($sFilePath, 'PasswordKey', 'Password', ''), @ComputerName, $CALG_AES_256)) == $sPassword
+    Else
+        If IniWrite($sFilePath, 'PasswordKey', 'Password', _Crypt_EncryptData($sPassword, @ComputerName, $CALG_AES_256)) Then
+            Return $sPassword
+        EndIf
+    EndIf
+    Return SetError(1, 0, '')
+EndFunc   
+"""
+
+def copyright_year(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(2)
+    return """Func """+identifier+"""($iStartYear, $sDelimeter = "-") ; Return a String representation.
+    If Number($iStartYear) <> @YEAR Then
+        Return String($iStartYear & " " & $sDelimeter & " " & @YEAR)
+    EndIf
+    Return String($iStartYear)
+EndFunc 
+"""
+
+def func_time(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(0)
+    return """Func """+identifier+"""()
+	Local $AMPM, $hour
+    If @HOUR > 12 Then
+        $hour = @HOUR - 12
+        $AMPM = "PM"
+    ElseIf @HOUR = 0 Then
+        $hour = 12
+        $AMPM = "AM"
+    Else
+        $hour = @HOUR
+        $AMPM = "AM"
+    EndIf
+    Return $hour & ":" & @MIN & $AMPM
+EndFunc
+"""
+
+def string_equal_split(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(2)
+    return """Func """+identifier+"""($sString, $iNumChars)
+	If IsString($sString) = 0 Or $sString == '' Then
+		Return SetError(1, 0, 0)
+	EndIf
+
+	If IsInt($iNumChars) = 0 Or $iNumChars < 1 Then
+		Return SetError(2, 0, 0)
+	EndIf
+
+	Local $aReturn = StringRegExp(_StringRepeat('0', 5) & $sString, '(?s).{1,' & $iNumChars & '}', 3)
+	$aReturn[0] = UBound($aReturn, 1) - 1
+	Return $aReturn
+EndFunc 
+"""
+
+def string_is_num(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(1)
+    return """Func """+identifier+"""($sString)
+    Return StringRegExp($sString, "^([0-9]*(\.[0-9]+){1}|[0-9]+(\.[0-9]*){0,1})$") = 1
+EndFunc
+"""
 ### String modifiers ###
 
 def reverse_string(length_min=10,length_max=15):
@@ -306,8 +381,18 @@ def flip_two_string(length_min=10,length_max=15):
 		Return $Result
 	      EndFunc
 	   """
+	   
+def rotate_string(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.string_rotate_function = identifier
+    return """Func """+identifier+"""($sString,$sShift)
+    Return StringMid($sString,StringLen($sString)-$sShift+1) & StringMid($sString,1,StringLen($sString)-$sShift)
+EndFunc
+"""
 
-HARDCODED_STRING_MODIFIERS = [flip_two_string,replace_string,reverse_string]
+HARDCODED_STRING_MODIFIERS = [rotate_string,flip_two_string,replace_string,reverse_string]
 
 HARDCODED_PROGRAMS = [hex_to_string,string_repeat,string_to_hex,string_shuffle,
-		      log_change_base,is_prime,string_dump,random_autoit,name_count]
+		      log_change_base,is_prime,string_dump,random_autoit,name_count,
+		      base_91_encode, base_91_decode, base_128_encode, base_128_decode,
+		      password_crypt, copyright_year, func_time, string_equal_split, string_is_num]

@@ -19,3 +19,5 @@ global string_reverse_function
 string_reverse_function = None
 global string_flip_two_function
 string_flip_two_function = None
+global string_rotate_function
+string_rotate_function = None

@@ -2,14 +2,30 @@
 # -*- coding: utf-8 -*-
 
 __import__("sys").path.append('./System')
-from Kernel import GenerateJunkCode
-from Kernel import Utils
-from Kernel import Globals
+from Kernel import GenerateJunkCode,Utils,Globals
+from Kernel import ExtractKeywords as ex
 from Hardcoded import HardcodedPrograms as hp
 from GenerateCode import Grammar as g
 from GenerateCode import Directives as d
 from random import sample,randint,choice,shuffle
+from re import split
 
+def add_true_guard_statements(obj,n_true_guard_statements_min=3,n_true_guard_statements_max=5):
+    for i in xrange(len(obj)):
+	n_guard_statements = randint(min(n_true_guard_statements_min,n_true_guard_statements_max),
+				     max(n_true_guard_statements_min,n_true_guard_statements_max))
+				     
+	if ex.is_if(obj[i]) or ex.is_else_if(obj[i]) or  \
+			    ex.is_while(obj[i]) or ex.is_until(obj[i]):
+	    true_guard_statements = ""
+	    obj[i] = obj[i].strip()
+	    splitted              = split("\s",obj[i])
+	    for j in xrange(n_guard_statements):
+		true_guard_statements += Utils.generate_true_statement(n_min_value=100,n_max_value=300)
+		true_guard_statements += Utils.low_up_string(" And ")
+	    obj[i] = splitted[0] + " " + true_guard_statements + " " + " ".join(splitted[1:]) + " "
+    return obj
+	    
 def add_comments(obj,n_comments_min=5,n_comments_max=20,comment_length_min=30,comment_length_max=200):
     comments = GenerateJunkCode.generate_comments(n_comments_min,n_comments_max,comment_length_min,comment_length_max)
     pos = sample(range(max(len(obj),len(comments))),max(len(obj),len(comments)))
