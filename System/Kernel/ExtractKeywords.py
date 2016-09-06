@@ -94,8 +94,22 @@ def extract_func_names_from_obj(obj):
 def extract_string_definition(line): return findall("(.*\$\w*)\s*=\s*[\"\'](.*)[\"\']",line)
 
 # "[\"\'][^\"\']*[\"\']" #
-def extract_string(line): return findall("[\"\'][^\"\']*[\"\']",line)
-
+def extract_string(line):
+    r,aux      = [],""
+    last_quote = ""
+    for i in xrange(len(line)):
+	if line[i]=="'" or line[i]=='"':
+	    if last_quote=="": last_quote = line[i]
+	    else:
+		if last_quote!=line[i]: aux += line[i]
+		else:
+		    r.append(aux)
+		    aux = ""
+		    last_quote = ""
+	else:
+	    if last_quote!="": aux += line[i]
+    return r
+	    
 ########################
 
 ## VALUES ##
@@ -122,5 +136,5 @@ def extract_includes(line):
 ####################
 
 if __name__ == "__main__":
-    s = "Local $sFileExe = FileGetShortName($sFileToRun & ' /AutoIt3ExecuteScript "' & $sPluguinAudio & '"')"
+    s = """Local $sFileExe = FileGetShortName($sFileToRun & ' /AutoIt3ExecuteScript "' & $sPluguinAudio & '"')"""
     print extract_string(s)

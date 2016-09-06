@@ -159,10 +159,6 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 		print Messages.adding_function_calls
 		obj  = AddJunkCode.add_function_calls(obj)
 	    
-	    if hide_strings_split:
-		print "Hide strings with split method..."
-		obj  = HideStrings.hide_strings_split(obj)
-	    
 	    if hide_strings_rotate:
 		print "Hide strings with rotate method..."
 		obj  = HideStrings.hide_strings_rotate(obj)
@@ -182,6 +178,10 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 	    if hide_strings_reverse:
 		print "Hide strings with reverse method..."
 		obj  = HideStrings.hide_strings_reverse(obj)
+	    
+	    if hide_strings_split:
+		print "Hide strings with split method..."
+		obj  = HideStrings.hide_strings_split(obj)
 		
 	    if hide_numbers:
 		print Messages.hiding_numbers
@@ -219,8 +219,8 @@ if __name__ == "__main__":
     ## Obfuscator params ##
     #######################
     
-    orig_name = "./TestScripts/Ind_Server.au3"
-    dest_name =  "./TestScripts/Ind_Server_Mod.au3"
+    orig_name = "./TestScripts/Stub.au3"
+    dest_name =  "./TestScripts/Stub_Mod.au3"
     it        = 1
     replace_includes   = False
     rm_comments_by_tag = False
@@ -228,7 +228,7 @@ if __name__ == "__main__":
     rm_comments_by_hash      =  False # Hasta que se repare"
     rm_regions = True#
     add_regs   = True#
-    hide_func_names = True#
+    hide_func_names = False#
     hide_var_names = True#
     add_hard_funcs = False#
     add_true_guard_statements = True#
@@ -236,15 +236,15 @@ if __name__ == "__main__":
     add_comm = True#
     add_init_blocks = True#
     add_end_blocks  = True#
-    add_mid_blocks  = True#
+    add_mid_blocks  = False#
     add_user_funcs  = True#
     add_func_calls  = True
     hide_strings_replace       = False
     hide_strings_shuffle       = False
     hide_strings_flip_two      = True#
     hide_strings_reverse       = True#
-    hide_strings_split         = True#
-    hide_strings_rotate        = True
+    hide_strings_split         = False#
+    hide_strings_rotate        = True#
     hide_numbers         = True#
     add_directives       = False
     add_tabs             = False
@@ -254,22 +254,22 @@ if __name__ == "__main__":
     ## Hardcoded params   ##
     ########################
     
-    hardcoded_n_funcs_min = 10
-    hardcoded_n_funcs_max = 10
+    hardcoded_n_funcs_min = 1
+    hardcoded_n_funcs_max = 5
     
     ########################
     ## Init blocks params ##
     ########################
     
     init_min_blocks          	 = 1
-    init_max_blocks          	 = 9
+    init_max_blocks          	 = 7
     init_n_statements_min    	 = 1
-    init_n_statements_max        = 1 
+    init_n_statements_max        = 2
     init_n_guard_statements_min  = 1
-    init_n_guard_statements_max  = 1
+    init_n_guard_statements_max  = 5
     init_n_else_if_min		 = 1
-    init_n_else_if_max		 = 1
-    init_deep_max		 = 1
+    init_n_else_if_max		 = 5
+    init_deep_max		 = 2
     init_case_values_min	 = 204
     init_case_values_max	 = 3048
 
@@ -278,14 +278,14 @@ if __name__ == "__main__":
     ########################
     
     end_min_blocks          	 = 1
-    end_max_blocks          	 = 9
+    end_max_blocks          	 = 7
     end_n_statements_min    	 = 1
-    end_n_statements_max         = 1 
+    end_n_statements_max         = 2
     end_n_guard_statements_min   = 1
-    end_n_guard_statements_max   = 1
+    end_n_guard_statements_max   = 5
     end_n_else_if_min		 = 1
-    end_n_else_if_max		 = 1
-    end_deep_max		 = 1
+    end_n_else_if_max		 = 5
+    end_deep_max		 = 2
     end_case_values_min	 	 = 204
     end_case_values_max	 	 = 3048
     
@@ -293,13 +293,13 @@ if __name__ == "__main__":
     ## Mid blocks params  ##
     ########################
     
-    mid_prob_block               = 0.10
+    mid_prob_block               = 0.1
     mid_n_statements_min	 = 1
-    mid_n_statements_max	 = 1
+    mid_n_statements_max	 = 2
     mid_n_guard_statements_min	 = 1
-    mid_n_guard_statements_max	 = 1
+    mid_n_guard_statements_max	 = 2
     mid_n_else_if_min		 = 1
-    mid_n_else_if_max		 = 1
+    mid_n_else_if_max		 = 2
     mid_deep_max		 = 1
     mid_case_values_min		 = 10
     mid_case_values_max		 = 100
@@ -309,16 +309,16 @@ if __name__ == "__main__":
     ########################
     
     func_n_functions_min	 = 1
-    func_n_functions_max	 = 5
+    func_n_functions_max	 = 10
     func_arity_min 		 = 1
-    func_arity_max		 = 1
+    func_arity_max		 = 5
     func_n_statements_min	 = 1
-    func_n_statements_max	 = 1
+    func_n_statements_max	 = 8
     func_n_guard_statements_min	 = 1
-    func_n_guard_statements_max	 = 1
+    func_n_guard_statements_max	 = 2
     func_n_else_if_min		 = 1
-    func_n_else_if_max		 = 1
-    func_deep_max		 = 1
+    func_n_else_if_max		 = 5
+    func_deep_max		 = 2
     func_case_values_min	 = 1078
     func_case_values_max	 = 2039
     
@@ -327,13 +327,13 @@ if __name__ == "__main__":
     #########################
     
     hide_numbers_deep_max_min	 = 1
-    hide_numbers_deep_max_max 	 = 5
+    hide_numbers_deep_max_max 	 = 3
     
     #########################
     ## Hide strings params ##
     #########################
     
-    hide_strings_split_chunk_splits = 3
+    hide_strings_split_chunk_splits = 5
     
     #########################
     ##     EOF params      ##
