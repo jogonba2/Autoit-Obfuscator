@@ -76,11 +76,11 @@
 * Dar la posibilidad de especificar más parámetros como el tamaño de los identificadores generados (esto se considera en las funciones implementadas pero no se deja al usuario especificarlo,   puede reducir considerablemente el tamaño del código).
 * Hardcodear instancias simples de problemas NP.
 
-Errores conocidos:
+## Errores conocidos
 
 * Duplicate name (function) -> 
-    * Problema: Repetición del nombre de alguna función.
-    * Solución: Volver a ejecutar el ofuscador.
+    * Problema: Repetición del nombre de alguna función (al parecer ocurre cuando se añaden directivas include repetidas).
+    * Solución: Volver a ejecutar el ofuscador (desactivar la función de añadir directivas).
     
 * Error in expresion        -> 
     * Problema: Error en algún Switch generado
@@ -90,4 +90,28 @@ Errores conocidos:
     * Problema: Error general, fuente desconocida.
     * Solución: Volver a ejecutar el ofuscador, error general, fuente desconocida.
 
-* Ante cualquier otro error, volver a ofuscar y si se soluciona (o no), comentad en Issues.
+* Undefined variable        ->
+    * Problema: Se hace uso de una variable no definida en alguna evaluación. 
+		Generalmente ocurre cuando se intentan ocultar variables y se hace uso en el código de constantes AutoIt.
+    * Solución: Desactivar la función de ocultar variables. (Intentad volviendo a ejecutar el ofuscador)
+
+* Only Object-type variables allowed in a "With" statement ->
+    * Problema: La variable especificada en la guarda del bloque With no es un objeto.
+		Ocurre por una inicialización incorrecta de es tipo de bloques.
+    * Solución: Volver a ejecutar el ofuscador.
+
+* Variable must be of type "Object" ->
+    * Problema: Alguna variable no es del tipo esperado (Object) en alguna expresión. Fuente desconocida.
+    * Solución: Volver a ejeutar el ofuscador.
+
+## Changelog 1
+
+* Añadidos bloques For ... In, With, While y Do ... Until.
+* Creación y uso de objetos COM.
+* Operador ternario.
+* Enums y consts (bug).
+* Reparado el bug al ocultar variables no definidas por el usuario.
+* Considerado Step en bucles For ... To.
+* Añadidas cuatro funciones hardcodeadas.
+* Añadido método para split para ofuscar strings.
+* Actualizada la lista de errores y soluciones.
