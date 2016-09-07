@@ -82,7 +82,14 @@ def extract_variables_from_obj(obj):
 #################
 
 ## FUNC NAMES ##
-def extract_func_names(line): return findall(".*Func (\w*).*",line)
+def extract_func_names(line): 
+    aux = line.strip()
+    res = []
+    if aux[0:4].lower()=="func":
+	res.append(aux[4:aux.find("(")].strip())
+    return res
+    
+    #return findall(".*Func (\w*).*",line)
 
 def extract_func_names_from_obj(obj): 
     identifiers = set()

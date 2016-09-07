@@ -17,6 +17,17 @@ $s = StringFromASCIIArray($s)
 -> Falta generar codigo para cifrar -> C.decrypt(C.encrypt($s)) 
 """
 
+def hide_strings_hexify(obj):
+    for i in xrange(len(obj)):
+	v = ex.extract_string(obj[i])
+	aux = obj[i].strip()
+	if len(aux)>0 and aux[0]!="#" and not "RegExp" in aux:
+	    for j in xrange(len(v)):
+		if len(v[j])>0:
+		    obj[i] = obj[i].replace('"'+v[j]+'"','BinaryToString("'+StringModifiers.hexify_string(v[j])+'") ')
+		    obj[i] = obj[i].replace("'"+v[j]+"'","BinaryToString('"+StringModifiers.hexify_string(v[j])+"') ")
+    return obj
+    
 def hide_strings_rotate(obj):
     for i in xrange(len(obj)):
 	v = ex.extract_string(obj[i])

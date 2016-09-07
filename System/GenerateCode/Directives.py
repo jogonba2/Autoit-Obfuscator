@@ -32,8 +32,7 @@ def random_includes(n_includes_min=10,n_includes_max=20):
     res = ""
     n_includes_min,n_includes_max     = max(n_includes_min,0),min(len(Config.INCLUDES),n_includes_max)
     n_includes                        = randint(min(n_includes_min,n_includes_max),max(n_includes_min,n_includes_max))
-    pos_includes                      = sample(range(len(Config.INCLUDES)),n_includes)
-    for i in xrange(n_includes): res += include(Config.INCLUDES[pos_includes[i]])
+    for i in xrange(n_includes): res += include(Config.INCLUDES.pop(0))
     return res
     
 

@@ -9,15 +9,24 @@ from re import sub,DOTALL
 
 ## Requiere el código estructurado ##
 def remove_comments_by_semicolon(obj): 
+    res = []
     for i in xrange(len(obj)):
-	obj[i] = obj[i][obj[i].rfind(";")+1:]
+	aux = obj[i].strip()
+	if len(aux)>0:
+	    if aux[0]!=";": res.append(obj[i])
     return obj
 
 def remove_comments_by_hash(obj):
     res = []
     for i in xrange(len(obj)): 
-	aux = obj[i].strip()
-	if len(aux)>0 and aux[0]!="#" and not "include" in aux: res.append(obj[i])
+	aux = obj[i].strip().lower()
+	if len(aux)>0:
+	    if aux[0]=="#":
+		if aux.find("#comments-start")==0 or aux.find("#comments-end")==0 or aux.find("#include")==0 or \
+		   aux.find("#notrayicon")==0 or aux.find("#onautoitstartregister")==0 or aux.find("#pragma")==0 or \
+		   aux.find("#requireadmin")==0 or aux.find("#cs")==0 or aux.find("#ce")==0:
+		   res.append(obj[i]) 
+	    else: res.append(obj[i])
     return res
     
 def remove_region_directive(obj):

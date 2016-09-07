@@ -146,12 +146,19 @@ def add_function_calls(obj,functions=Globals.defined_new_functions,arity=Globals
 	obj.insert(random_pos,functions[i]+"("+",".join(param_names)+")\n\n")
     return obj
 
-def add_hardcoded_funcs(obj,functions=Globals.defined_new_functions,arity=Globals.arity_new_functions,n_funcs_min=3,n_funcs_max=5):
+def add_hardcoded_funcs(obj,add_calls=False,functions=Globals.defined_new_functions,arity=Globals.arity_new_functions,n_funcs_min=3,n_funcs_max=5):
     n_funcs = randint(min(n_funcs_min,n_funcs_max),max(n_funcs_min,n_funcs_max))
     shuffle(hp.HARDCODED_PROGRAMS)
     funcs   = hp.HARDCODED_PROGRAMS[:n_funcs]
     for i in xrange(n_funcs):
-	obj.insert(0,funcs[i]()+"\n\n")
+	function_code   = funcs[i]()
+	obj.insert(0,function_code+"\n\n")
+	if add_calls:
+	    arity           = Globals.arity_new_functions[-1]
+	    identifier      = Globals.defined_new_functions[-1]
+	    params          = ",".join([g.value() for i in xrange(arity)])
+	    obj.insert(0,Utils.low_up_string(Utils.generate_random_declarator()) + \
+		       g.variable() + " = " + identifier + "("+params+")\n\n")
     return obj
 
 def add_hardcoded_string_modifiers(obj,hardcoded_function):

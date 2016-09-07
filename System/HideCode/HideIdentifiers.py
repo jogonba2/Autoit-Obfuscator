@@ -17,7 +17,7 @@ def hide_variable_names(obj):
     return obj.split(boundary)
     
 def hide_function_names(obj):
-    identifiers = list(ex.extract_func_names_from_obj(obj))[1:]
+    identifiers = list(ex.extract_func_names_from_obj(obj))
     replaces    = Utils.mod_names_identifier(identifiers)
     obj         = "\n".join(obj)
     for i in xrange(len(identifiers)):

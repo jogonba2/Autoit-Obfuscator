@@ -262,22 +262,6 @@ def base_128_decode(length_min=10,length_max=15):
 
 EndFunc \n\n"""
 
-def password_crypt(length_min=10,length_max=15):
-    identifier = Utils.generate_identifier(length_min,length_max)
-    Globals.defined_new_functions.append(identifier)
-    Globals.arity_new_functions.append(3)
-    return """Func """+identifier+"""($sPassword, $sFilePath, $iOverwrite = 0) ; By guinness, idea by Valuater.
-    If FileExists($sFilePath) And $iOverwrite = 0 Then
-        Return BinaryToString(_Crypt_DecryptData(IniRead($sFilePath, 'PasswordKey', 'Password', ''), @ComputerName, $CALG_AES_256)) == $sPassword
-    Else
-        If IniWrite($sFilePath, 'PasswordKey', 'Password', _Crypt_EncryptData($sPassword, @ComputerName, $CALG_AES_256)) Then
-            Return $sPassword
-        EndIf
-    EndIf
-    Return SetError(1, 0, '')
-EndFunc   
-"""
-
 def copyright_year(length_min=10,length_max=15):
     identifier = Utils.generate_identifier(length_min,length_max)
     Globals.defined_new_functions.append(identifier)
@@ -337,6 +321,58 @@ def string_is_num(length_min=10,length_max=15):
     Return StringRegExp($sString, "^([0-9]*(\.[0-9]+){1}|[0-9]+(\.[0-9]*){0,1})$") = 1
 EndFunc
 """
+
+ ##
+def autoit_win_get_text(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(0)
+    return """Func """+identifier+"""()
+    Local Const $hWnd = WinGetHandle(AutoItWinGetTitle()) ; Get the handle of the AutoIt Hidden Window by finding out the title of the AutoIt Hidden Window.
+    Return ControlGetText($hWnd, '', ControlGetHandle($hWnd, '', 'Edit1'))
+EndFunc  
+"""
+
+def is_beta(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(0)
+    return """Func """+identifier+"""()
+       Return Mod(StringSplit(@AutoItVersion, '.')[3], 2) == 1
+EndFunc 
+"""
+
+def is_default(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(1)
+    return """Func """+identifier+"""($sDefault)
+    Return StringRegExp($sDefault, "(?-i)\s|Default|-1|0")
+EndFunc 
+"""
+
+def script_name(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(0)
+    return """Func """+identifier+"""()
+	Return StringLeft(@ScriptName, StringInStr(@ScriptName, '.', 2, -1) - 1)
+EndFunc
+"""
+
+def string_get_chr_count(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(2)
+    return """Func """+identifier+"""($sStr, $sChr, $iCase = 0)
+	If $iCase <> 0 Then
+		$iCase = 1
+	EndIf
+	StringReplace($sStr, $sChr, $sChr, 0, $iCase)
+	Return @extended
+EndFunc  
+"""
+
 ### String modifiers ###
 
 def reverse_string(length_min=10,length_max=15):
@@ -395,4 +431,6 @@ HARDCODED_STRING_MODIFIERS = [rotate_string,flip_two_string,replace_string,rever
 HARDCODED_PROGRAMS = [hex_to_string,string_repeat,string_to_hex,string_shuffle,
 		      log_change_base,is_prime,string_dump,random_autoit,name_count,
 		      base_91_encode, base_91_decode, base_128_encode, base_128_decode,
-		      password_crypt, copyright_year, func_time, string_equal_split, string_is_num]
+		      copyright_year, func_time, string_equal_split, string_is_num,
+		      autoit_win_get_text, is_beta, is_default, script_name, 
+		      string_get_chr_count]

@@ -34,6 +34,8 @@ def split_string(s,chunk_size=3):
 	if i<len(chunks)-1: r += " & "
     return r
 
-if __name__ == "__main__":
-    print rotate_string("abcdef ghijkl mnopqr stuvwx")
+def hexify_string(s): return "0x"+"".join("{:02x}".format(ord(c)) for c in s).upper()
 
+if __name__ == "__main__":
+    #print rotate_string("abcdef ghijkl mnopqr stuvwx")
+    print hex_string("{8384-3442-2324}")
