@@ -126,4 +126,18 @@
 * Detectada la fuente de subscripted array (alguna de las funciones hardcodeadas).
 * Mejorada la estabilidad.
 
+##Changelog 3
+
+* Arreglados bugs con los ofuscados de strings (replace,reverse,flip_two,split,rotate), shuffle sigue dando problemas.
+* Mejorado el ofuscado de strings.
+* Arreglados bugs con los ofuscados de nombres de variables.
+* Arreglado bug al eliminar comentarios que empiezan por # (hash).
+* Arreglado bug al eliminar comentarios que empiezan por ;
+* Añadidos snippets de https://www.autoitscript.com/wiki/AutoIt_Snippets como funciones hardcodeadas.
+* Añadida función para llamar a las funciones hardcodeadas.
+* Añadido nuevo método de ofuscado de strings, hexify (BinaryToString , StringToBinary). 
+  La longitud de las strings, con este método, se duplica, si supera el tamaño máximo de linea (Unterminated string) usar junto método split.
+* Arreglados bugs al añadir funciones hardcodeadas.
+* Extraídos mensajes para permitir traducciones.
+* Mejorado el aspecto de la salida por consola.
 
