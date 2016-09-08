@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from re import match,findall,compile,search
+from re import match,findall,compile,search,sub
 
 ## GENERAL ##
 def is_keyword_block(line,key):
@@ -63,16 +63,35 @@ def extract_comments_by_c_tag(line): return findall(r"#cs.*#ce[^\n]*","",line)
 
 ## VARIABLES ##
 
+def extract_parameters(line):
+    aux = line.strip()
+    params = []
+    res    = []
+    if aux.lower().find("func")==0: params = aux[aux.find("(")+1:aux.rfind(")")].split(",")
+    for i in xrange(len(params)): 
+	params[i] = params[i].strip()
+	found = params[i].find("=")
+	if found!=-1: params[i] = params[i][0:params[i].find("=")]
+	found = params[i].lower().find("byref")
+	if found==0:  params[i] = params[i][found+len("byref"):].strip()
+	res.append(params[i].strip())
+    return res
+	
 def extract_variables(line): return findall("(\$\w*)",line)
 
 def extract_defined_variables(line):
     aux = line.strip().title()
     if aux.find("Local")==0 or aux.find("Dim")==0 or aux.find("Global")==0: return findall(r"(\$\w*)",line)
     else: return []
+
+def extract_parameters_from_obj(obj):
+    identifiers = set()
+    for line in obj: identifiers = identifiers.union(set(extract_parameters(line)))
+    return identifiers
     
 def extract_defined_variables_from_obj(obj):
     identifiers = set()
-    for line in obj:identifiers = identifiers.union(set(extract_defined_variables(line)))
+    for line in obj: identifiers = identifiers.union(set(extract_defined_variables(line)))
     return identifiers
     
 def extract_variables_from_obj(obj):
@@ -143,5 +162,12 @@ def extract_includes(line):
 ####################
 
 if __name__ == "__main__":
-    s = """Local $sFileExe = FileGetShortName($sFileToRun & ' /AutoIt3ExecuteScript "' & $sPluguinAudio & '"')"""
-    print extract_string(s)
+    s = """Func _TCPConnect($a  , $iDestPort , $sSourceAddr = "", $iSourcePort = 0, $iTimeOut = 0)"""
+    #print extract_string(s)
+    identifiers = extract_parameters(s)
+    replaces    = [str(i) for i in xrange(len(identifiers))]
+    print identifiers
+    for i in xrange(len(identifiers)):
+	print identifiers[i]
+	if identifiers[i]: s = sub(r"\$"+identifiers[i][1:]+r"\b","$"+replaces[i]+"  ",s)
+    print s

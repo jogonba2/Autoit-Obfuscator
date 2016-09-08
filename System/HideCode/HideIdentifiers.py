@@ -6,13 +6,24 @@ from Kernel import Utils
 from Kernel import ExtractKeywords as ex
 from re import sub,search
 
+def hide_function_parameters(obj):
+    identifiers = list(ex.extract_parameters_from_obj(obj))
+    replaces    = Utils.mod_names_hash(identifiers)
+    boundary = "\n"+Utils.generate_random_string(20,30)+"\n"
+    obj      = boundary.join(obj)
+    for i in xrange(len(identifiers)):
+	try:
+	    if identifiers[i]: obj = sub(r"\$"+identifiers[i][1:]+r"\b","$"+replaces[i]+"  ",obj)
+	except: continue
+    return obj.split(boundary)
+    
 def hide_variable_names(obj):
     identifiers = list(ex.extract_defined_variables_from_obj(obj)) # Extraer solo las que se definen en el script #
     replaces = Utils.mod_names_hash(identifiers)
     boundary = "\n"+Utils.generate_random_string(20,30)+"\n"
     obj      = boundary.join(obj)
     for i in xrange(len(identifiers)):
-	obj = sub(r"\$"+identifiers[i][1:]+r"\b","$"+replaces[i],obj)
+	if identifiers[i]: obj = sub(r"\$"+identifiers[i][1:]+r"\b","$"+replaces[i]+"  ",obj)
 	
     return obj.split(boundary)
     
@@ -21,7 +32,7 @@ def hide_function_names(obj):
     replaces    = Utils.mod_names_identifier(identifiers)
     obj         = "\n".join(obj)
     for i in xrange(len(identifiers)):
-	obj     = sub(r""+identifiers[i]+r"\s*\(",replaces[i]+"(",obj)
+	if identifiers[i]: obj     = sub(r""+identifiers[i]+r"\s*\(",replaces[i]+"(",obj)
     return obj.split("\n")
 
 if __name__ == "__main__":

@@ -1,8 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from random import randint
+from random import randint,shuffle
 
+def shuffle_string(s):
+    list1_shuf = []
+    index_shuf = range(len(s))
+    shuffle(index_shuf)
+    for i in index_shuf: list1_shuf.append(s[i])
+    return "".join(list1_shuf),",".join(map(str,index_shuf))
+    
 def rotate_string(s):
     rnd = randint(0,len(s)-1)
     return (s[rnd:]+s[:rnd],rnd)
@@ -38,4 +45,5 @@ def hexify_string(s): return "0x"+"".join("{:02x}".format(ord(c)) for c in s).up
 
 if __name__ == "__main__":
     #print rotate_string("abcdef ghijkl mnopqr stuvwx")
-    print hex_string("{8384-3442-2324}")
+    #print hex_string("{8384-3442-2324}")
+    print shuffle_string("")

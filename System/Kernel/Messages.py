@@ -1,8 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+general_process           = " GENERAL "
+obfuscate_process         = " OBFUSCATE "
+add_junk_process          = " ADD JUNK "
+end_process               = " WRITING "
+results_process           = " RESULTS "
+
 extracting_code    	  = "Extracting code ..."
 extracting_files          = "Extracting include files from project ..."
+
 removing_comments_by_tag  = "Removing comments by #comments-start , #cs ..."
 removing_comments_by_hash = "Removing comments with hash # ..."
 removing_comments_by_scol = "Removing comments with semicolon ..."

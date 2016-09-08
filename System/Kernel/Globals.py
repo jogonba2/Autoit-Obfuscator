@@ -21,3 +21,5 @@ global string_flip_two_function
 string_flip_two_function = None
 global string_rotate_function
 string_rotate_function = None
+global string_shuffle_function
+string_shuffle_function = None
