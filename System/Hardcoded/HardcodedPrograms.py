@@ -80,32 +80,6 @@ def is_prime(length_min=10,length_max=15):
 EndFunc \n\n
 """
 
-def string_dump(length_min=10,length_max=15):
-    identifier = Utils.generate_identifier(length_min,length_max)
-    Globals.defined_new_functions.append(identifier)
-    Globals.arity_new_functions.append(2)
-    return """Func """+identifier+"""($sString, $iLength)
-
-    Local $sStringAsc, $sStringDec, $sStringHex, $sChar, $iIndex, $iPos = 1
-    For $iIndex = 1 To StringLen($sString)
-        $sChar = StringMid($sString, $iIndex, 1)
-        If Asc($sChar) >= 32 Then
-            $sStringAsc = $sStringAsc & "  " & $sChar & " "
-        Else
-            $sStringAsc = $sStringAsc & "  . "
-        EndIf
-        $sStringHex = $sStringHex & " " & Hex(Asc(StringMid($sString, $iIndex, 1)), 2) & " "
-        $sStringDec = $sStringDec & StringRight("00" & Asc(StringMid($sString, $iIndex, 1)), 3) & " "
-    Next
-    While $iPos < StringLen($sString)
-        ConsoleWrite(StringStripWS(StringMid($sStringAsc, ($iPos * 4) - 3, $iLength * 4), 2) & @LF)
-        ConsoleWrite(StringStripWS(StringMid($sStringHex, ($iPos * 4) - 3, $iLength * 4), 2) & @LF)
-        ConsoleWrite(StringStripWS(StringMid($sStringDec, ($iPos * 4) - 3, $iLength * 4), 2) & @LF & @LF)
-        $iPos += $iLength
-    WEnd
-
-EndFunc \n\n"""
-
 def random_autoit(length_min=10,length_max=15):
     identifier = Utils.generate_identifier(length_min,length_max)
     Globals.defined_new_functions.append(identifier)
@@ -333,14 +307,6 @@ def autoit_win_get_text(length_min=10,length_max=15):
 EndFunc  
 """
 
-def is_beta(length_min=10,length_max=15):
-    identifier = Utils.generate_identifier(length_min,length_max)
-    Globals.defined_new_functions.append(identifier)
-    Globals.arity_new_functions.append(0)
-    return """Func """+identifier+"""()
-       Return Mod(StringSplit(@AutoItVersion, '.')[3], 2) == 1
-EndFunc 
-"""
 
 def is_default(length_min=10,length_max=15):
     identifier = Utils.generate_identifier(length_min,length_max)
@@ -539,28 +505,7 @@ def bits_to_bytes(length_min=10,length_max=15):
 EndFunc
 """
 
-def generate(length_min=10,length_max=15):
-    identifier = Utils.generate_identifier(length_min,length_max)
-    Globals.defined_new_functions.append(identifier)
-    Globals.arity_new_functions.append(3)
-    return """Func """+identifier+"""($iSize = 7, $iMin = 1, $iMax = 36)
-	Local $aArray[$iSize], $sReturn = ''
-	$aArray[0] = Random($iMin, $iMax, 1)
-	For $i = 0 To $iSize - 1
-		While 1
-			$sReturn = Random($iMin, $iMax, 1)
-			For $j = 0 To $i - 1
-				If $aArray[$j] = $sReturn Then
-					ContinueLoop 2
-				EndIf
-			Next
-			ExitLoop
-		WEnd
-		$aArray[$i] = $sReturn
-	Next
-	Return $aArray
-EndFunc
-"""
+
 
 def it_fibo(length_min=10,length_max=15):
     identifier = Utils.generate_identifier(length_min,length_max)
@@ -660,16 +605,6 @@ def m_sec(length_min=10,length_max=15):
 EndFunc
 """
 
-def get_todays_date(length_min=10,length_max=15):
-    identifier = Utils.generate_identifier(length_min,length_max)
-    Globals.defined_new_functions.append(identifier)
-    Globals.arity_new_functions.append(1)
-    return """Func """+identifier+"""($iReturnTime = 1)
-    Local $aMDay[8] = [7, "Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"], _
-            $aMonth[13] = [12, "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"], $aTime[2] = ["", ' ' & @HOUR & ':' & @MIN & ':' & '00']
-    Return $aMDay[@WDAY] & ', ' & @MDAY & ' ' & $aMonth[@MON] & ' ' & @YEAR & $aTime[$iReturnTime]
-EndFunc
-"""
 
 def return_card(length_min=10,length_max=15):
     identifier = Utils.generate_identifier(length_min,length_max)
@@ -694,22 +629,6 @@ def return_card(length_min=10,length_max=15):
 EndFunc
  """
 
-def get_time_online(length_min=10,length_max=15):
-    identifier = Utils.generate_identifier(length_min,length_max)
-    Globals.defined_new_functions.append(identifier)
-    Globals.arity_new_functions.append(1)
-    return """Func """+identifier+"""($iTimeZone)
-	Local $aTimeZone[7] = ['utc', 'est', 'cst', 'mst', 'pst', 'akst', 'hast']
-
-	Local $sRead = BinaryToString(InetRead('http://www.timeapi.org/' & $aTimeZone[$iTimeZone] & '/now?format=\Y/\m/\d%20\H:\M:\S'))
-
-	If @error Then
-		Return SetError(1, 0, @YEAR & '/' & @MON & '/' & @MDAY & ' ' & @HOUR & ':' & @MIN & ':' & @SEC)
-	EndIf
-
-	Return $sRead
-EndFunc
- """
  
 def string_to_ip_array(length_min=10,length_max=15):
     identifier = Utils.generate_identifier(length_min,length_max)
@@ -775,36 +694,7 @@ def get_time_online(length_min=10,length_max=15):
 EndFunc
  """
  
-def ini_read_file(length_min=10,length_max=15):
-    identifier = Utils.generate_identifier(length_min,length_max)
-    Globals.defined_new_functions.append(identifier)
-    Globals.arity_new_functions.append(1)
-    return """Func """+identifier+"""$sFilePath)
-    Local $aReturn[1][3] = [[0, 3]], $aSectionArray, $aSectionNameArray, $iCount = 0
-    $aSectionNameArray = IniReadSectionNames($sFilePath)
-    If @error Then
-        Return SetError(1, 0, $aReturn)
-    EndIf
-    For $A = 1 To $aSectionNameArray[0]
-        $aSectionArray = IniReadSection($sFilePath, $aSectionNameArray[$A])
-        If @error Then
-            ContinueLoop
-        EndIf
-        For $B = 1 To $aSectionArray[0][0]
-            $aReturn[0][0] += 1
-            $iCount += 1
-            If $aReturn[0][0] <= $iCount + 1 Then
-                ReDim $aReturn[$aReturn[0][0] * 2][$aReturn[0][1]]
-            EndIf
-            $aReturn[$iCount][0] = $aSectionArray[$B][0]
-            $aReturn[$iCount][1] = $aSectionArray[$B][1]
-            $aReturn[$iCount][2] = $aSectionNameArray[$A]
-        Next
-    Next
-    ReDim $aReturn[$aReturn[0][0] + 1][$aReturn[0][1]] ; Remove empty entries.
-    Return $aReturn
-EndFunc
-"""
+
 
 def random_text(length_min=10,length_max=15):
     identifier = Utils.generate_identifier(length_min,length_max)
@@ -871,14 +761,6 @@ def os_arch(length_min=10,length_max=15):
 EndFunc
 """
 
-def os_version_ex(length_min=10,length_max=15):
-    identifier = Utils.generate_identifier(length_min,length_max)
-    Globals.defined_new_functions.append(identifier)
-    Globals.arity_new_functions.append(1)
-    return """Func """+identifier+"""()
-    Return StringLeft(FileGetVersion(@SystemDir & "\WinVer.exe"), 3)
-EndFunc
-"""
 
 ### String modifiers ###
 
@@ -952,15 +834,13 @@ EndFunc
 HARDCODED_STRING_MODIFIERS = [shuffle_string,rotate_string,flip_two_string,replace_string,reverse_string]
 
 HARDCODED_PROGRAMS = [hex_to_string,string_repeat,string_to_hex,string_shuffle,
-		      log_change_base,is_prime,string_dump,random_autoit,name_count,
+		      log_change_base,is_prime,random_autoit,name_count,
 		      base_91_encode, base_91_decode, base_128_encode, base_128_decode,
 		      copyright_year, func_time, string_equal_split, string_is_num,
-		      autoit_win_get_text, is_beta, is_default, script_name, 
+		      autoit_win_get_text, is_default, script_name, 
 		      string_get_chr_count,rgb_2_bgr,toggle_show_or_hide,are_icons_equal,calc_contrast_colour,
-		      image_size,switch_color,bin_to_int,int_to_bin,bytes_to_bits,bits_to_bytes,generate,it_fibo,
-		      miles_to_km,km_to_miles,random_char_gen,check_idle,m_sec,get_todays_date,return_card,
-		      get_time_online,string_to_ip_array,string_to_struct,is_file,get_time_online,ini_read_file,
-		      random_text,is_maximized,ternary,get_last_error_message,os_arch,os_version_ex]
-
-
+		      image_size,switch_color,bin_to_int,int_to_bin,bytes_to_bits,bits_to_bytes,it_fibo,
+		      miles_to_km,km_to_miles,random_char_gen,check_idle,m_sec,return_card,
+		      string_to_ip_array,string_to_struct,is_file,get_time_online,
+		      random_text,is_maximized,ternary,get_last_error_message,os_arch]
 

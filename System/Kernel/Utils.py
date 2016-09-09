@@ -39,7 +39,7 @@ def mod_names_hash(names):
 	replaces.append(hash_func.hexdigest())
     return replaces
     
-def mod_names_identifier(names,length_min=10,length_max=30):
+def mod_names_identifier(names,length_min=5,length_max=10):
     replaces = []
     for name in names: replaces.append(generate_identifier(length_min,length_max))
     return replaces

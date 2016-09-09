@@ -6,6 +6,7 @@ obfuscate_process         = u" OFUSCAR "
 add_junk_process          = u" AÑADIR BASURA "
 end_process               = u" ESCRIBIENDO "
 results_process           = u" RESULTADOS "
+compilation_process       = u" COMPILACIÓN "
 
 extracting_code    	  = u"Extrayendo código ..."
 extracting_files          = u"Extrayendo archivos incluídos del proyecto ..."
@@ -41,6 +42,7 @@ writing_code              = u"Escribiendo texto ofuscado ..."
 happy_end                 = u" ofuscado correctamente en "
 sad_end                   = u" no ofuscado; motivo: "
 end_application           = u"Presione una tecla para cerrar el ofuscador ..."
+
 hiding_function_params    = u"Ocultado nombres de los parámetros de las funciones ..."
 hiding_variable_names     = u"Ocultado nombre de las variables ..."
 hiding_function_names     = u"Ocultado nombre de las funciones ..."
@@ -53,7 +55,7 @@ hiding_strings_hexify     = u"Ocultando cadenas de texto con el método hexify .
 hiding_strings_shuffle    = u"Ocultando definición de cadenas de texto con el método shuffle ..."
 hiding_strings_split      = u"Ocultando cadenas de texto con el método split ..."
 
-
+compiling                 = u"Compilando ... "
 stack_overflow_error      = u"stack overflow por recursión en generación de bloques, pruebe a reducir el valor deep y regenerar el código."
 file_error                = u"error de archivo, probablemente has escrito mal el nombre del archivo."
 unknown_error             = u"Ha ocurrido un error desconocido; detalles: "

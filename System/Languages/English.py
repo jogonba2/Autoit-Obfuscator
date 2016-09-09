@@ -6,6 +6,7 @@ obfuscate_process         = u" OBFUSCATE "
 add_junk_process          = u" ADD JUNK "
 end_process               = u" WRITING "
 results_process           = u" RESULTS "
+compilation_process       = u" COMPILATION"
 
 extracting_code    	  = u"Extracting code ..."
 extracting_files          = u"Extracting include files from project ..."
@@ -54,6 +55,7 @@ hiding_strings_hexify     = u"Hiding strings with hexify method ..."
 hiding_strings_shuffle    = u"Hiding string definitions with shuffle method ..."
 hiding_strings_split      = u"Hiding strings with split method ..."
 
+compiling                 = u"Compiling ... "
 
 stack_overflow_error      = u"stack overflow because of recursion in block generating, try to reduce deep values and regenerate code."
 file_error                = u"file error, probably you have specified an incorrect file name."

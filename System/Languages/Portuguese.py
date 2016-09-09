@@ -6,6 +6,7 @@ obfuscate_process         = u" OFUSCAR "
 add_junk_process          = u" ADICIONAR LIXO "
 end_process               = u" ESCRITA "
 results_process           = u" RESULTADOS "
+compilation_process       = u" COMPILAÇãO "
 
 extracting_code    	  = u"Código de extrair ..."
 extracting_files          = u"Extraindo arquivos incluídos projecto ..."
@@ -42,6 +43,7 @@ happy_end                 = u" ofuscado corretamente "
 sad_end                   = u" Eu não ofuscado; motivo: "
 end_application           = u"Pressione uma tecla para fechar a ofuscador ..."
 
+
 hiding_function_params    = u"Escondendo parâmetros de função ..."
 hiding_variable_names     = u"Nomes de variaveis ocultas ..."
 hiding_function_names     = u"Escondido nome de funções ..."
@@ -54,11 +56,12 @@ hiding_strings_hexify     = u"Escondendo cadeias de texto com o método hexify .
 hiding_strings_shuffle    = u"Escondendo cadeias de texto que definem o método aleatório ..."
 hiding_strings_split      = u"Escondendo cadeias de texto com o método split ..."
 
+compiling                 = u"Compilando ... "
 
 stack_overflow_error      = u"por recursão bloco de geração de estouro de pilha, tente reduzir o valor profundo e regenerar o código."
 file_error                = u"erro de arquivo, você provavelmente incorreto o nome do arquivo."
 unknown_error             = u"Um erro desconhecido ocorreu; detalhes:"
-config_file_error         = u"Ele não foi encontrado ou não está bem formado arquivo config.ini .".encode('utf-8')
+config_file_error         = u"Ele não foi encontrado ou não está bem formado arquivo config.ini ."
 config_parse_error        = u"Config.ini não está bem formado definições de variáveis ​​de seleção"
 
 time_advertisement        = u"É provável que o código necessário para executar devido aos novos blocos adicionados."

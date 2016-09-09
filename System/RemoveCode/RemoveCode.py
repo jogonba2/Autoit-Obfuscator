@@ -14,7 +14,7 @@ def remove_comments_by_semicolon(obj):
 	aux = obj[i].strip()
 	if len(aux)>0:
 	    if aux[0]!=";": res.append(obj[i])
-    return obj
+    return res
 
 def remove_comments_by_hash(obj):
     res = []
