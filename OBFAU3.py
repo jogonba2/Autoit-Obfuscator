@@ -8,6 +8,7 @@ from System.HideCode import HideIdentifiers,HideNumbers,HideStrings,HideLines,Hi
 from System.RemoveCode import RemoveCode
 from System.Reorder import Reorder
 from sys import argv
+from os import system
 import argparse as ap
 import ConfigParser 
 import Languages.English as Messages
@@ -48,7 +49,8 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 	      mid_case_values_max,func_n_functions_min,func_n_functions_max,func_arity_min,func_arity_max,\
 	      func_n_statements_min,func_n_statements_max,func_n_guard_statements_min,func_n_guard_statements_max,\
 	      func_n_else_if_min,func_n_else_if_max,func_deep_max,func_case_values_min,func_case_values_max,\
-	      hide_numbers_deep_max_min,hide_numbers_deep_max_max,eof_fill_kb):
+	      hide_numbers_deep_max_min,hide_numbers_deep_max_max,eof_fill_kb,auto_compile,out_exe,icon,compression, \
+	      upx_pack,x64,x86,console,gui):
 
     try:
 	print "-"*35+Messages.general_process+"-"*35+"\n"
@@ -96,6 +98,11 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 	    obj  = HideIdentifiers.hide_function_names(obj)	
 	    print "\r"+Messages.hiding_function_names+" "+Messages.correct_symbol
 	    
+	if hide_func_params:
+	    print "\r"+Messages.hiding_function_params,
+	    obj  = HideIdentifiers.hide_function_parameters(obj)
+	    print "\r"+Messages.hiding_function_params+" "+Messages.correct_symbol
+	    
 	if add_hard_funcs:
 	    print "\r"+Messages.adding_hardcoded_functs,
 	    obj  = AddJunkCode.add_hardcoded_funcs(obj,add_calls=add_hard_funcs_calls,n_funcs_min = hardcoded_n_funcs_min,n_funcs_max = hardcoded_n_funcs_max)
@@ -105,11 +112,6 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 	    print "\r"+Messages.hiding_variable_names,
 	    obj  = HideIdentifiers.hide_variable_names(obj)
 	    print "\r"+Messages.hiding_variable_names+" "+Messages.correct_symbol
-
-	if hide_func_params:
-	    print "\r"+Messages.hiding_function_params,
-	    obj  = HideIdentifiers.hide_function_parameters(obj)
-	    print "\r"+Messages.hiding_function_params+" "+Messages.correct_symbol
 	    
 	if add_true_guard_statements:
 	    print "\r"+Messages.adding_true_guard_sttmnts,
@@ -300,9 +302,28 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
     if add_init_blocks or add_end_blocks or add_mid_blocks or add_func_calls or add_hard_funcs_calls:
 	print "\n\n"+Messages.advertisement_symbol+" "+Messages.time_advertisement+"\n\n"
     
-
-def set_language(language):
-    pass
+    
+    print "\n\n"
+    
+    print ("-"*34+Messages.compilation_process+"-"*34)[:-1]+"\n"
+    
+    aut2exe_command_line = "Aut2exe.exe "
+    if auto_compile:
+	aut2exe_command_line += "/In "+dest_name+" "
+	aut2exe_command_line += "/out "+out_exe+" "
+	if icon!="None": aut2exe_command_line += "/icon "+icon+" "
+	if compression!="None": aut2exe_command_line += "/comp "+str(compression)+" "
+	if upx_pack: aut2exe_command_line += "/pack "
+	if x64: aut2exe_command_line += "/x64 "
+	if x86: aut2exe_command_line += "/x86 "
+	if console: aut2exe_command_line += "/console "
+	if gui:     aut2exe_command_line += "/gui "
+	
+	print "\n\n"
+	print "\r"+Messages.compiling+" "+aut2exe_command_line+" ...",
+	system(aut2exe_command_line)
+	print "\r"+Messages.compiling+" "+aut2exe_command_line+" "+Messages.correct_symbol+"\n"
+	
     
 if __name__ == "__main__":
     
@@ -325,8 +346,8 @@ if __name__ == "__main__":
 	else: import Languages.English as Messages
 	##################
 	
-	orig_name = config.get("ProjectFiles","ScriptToObfuscate") #"./TestScripts/Stub.au3"
-	dest_name = config.get("ProjectFiles","ScriptObfuscated")  #"./TestScripts/stub_mod.au3"
+	orig_name = config.get("ProjectFiles","ScriptToObfuscate").strip() #"./TestScripts/Stub.au3"
+	dest_name = config.get("ProjectFiles","ScriptObfuscated").strip()  #"./TestScripts/stub_mod.au3"
 	it        = config.getint("General","Iterations") # 1
 	replace_includes   = config.getboolean("ProjectFiles","ReplaceIncludes") # False X
 	rm_comments_by_tag = config.getboolean("RemoveCode","CommentsByTag") #True # X
@@ -451,6 +472,20 @@ if __name__ == "__main__":
 	#########################
 	
 	eof_fill_kb = config.getint("AddJunkParams","FillKBEOF")
+	
+	#########################
+	##     Compilation     ##
+	#########################
+	
+	auto_compile = config.getboolean("Compilation","Autocompile")
+	out_exe      = config.get("Compilation","Out")
+	icon         = config.get("Compilation","Icon")
+	compression  = config.getint("Compilation","Compression")
+	upx_pack     = config.getboolean("Compilation","UPXpack")
+	x64          = config.getboolean("Compilation","X64")
+	x86          = config.getboolean("Compilation","X86")
+	console      = config.getboolean("Compilation","Console")
+	gui          = config.getboolean("Compilation","Gui")
     
     except:
 	raw_input(Messages.config_file_error+" "+Messages.error_symbol)
@@ -471,6 +506,7 @@ if __name__ == "__main__":
 	      mid_case_values_max,func_n_functions_min,func_n_functions_max,func_arity_min,func_arity_max,\
 	      func_n_statements_min,func_n_statements_max,func_n_guard_statements_min,func_n_guard_statements_max,\
 	      func_n_else_if_min,func_n_else_if_max,func_deep_max,func_case_values_min,func_case_values_max,\
-	      hide_numbers_deep_max_min,hide_numbers_deep_max_max,eof_fill_kb)
+	      hide_numbers_deep_max_min,hide_numbers_deep_max_max,eof_fill_kb,auto_compile,out_exe,icon,compression, \
+	      upx_pack,x64,x86,console,gui)
 
     raw_input(Messages.end_application)
