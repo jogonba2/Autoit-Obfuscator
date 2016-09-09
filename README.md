@@ -141,3 +141,26 @@
 * Extraídos mensajes para permitir traducciones.
 * Mejorado el aspecto de la salida por consola.
 
+##Changelog 4
+
+* Añadido fichero de configuración del proceso. Todos los parámetros se gestionan ahora desde config.ini. 
+* Traducción al Español y Portugués (Spanish,English,Portuguese disponibles). 
+* Posibilidad de cambiar de idioma. 
+* Ocultados parámetros de funciones. 
+* Soporte a ByRef y valores por defecto en parámetros de funciones. 
+* Mejorada la estabilidad en la ofuscación de nombres de variables, funciones y parámetros. 
+* Generado ejecutable. 
+* Añadidos todos los snippets AutoIt (https://www.autoitscript.com/wiki/AutoIt_Snippets) sin dependencias ni efectos visibles (+30). 
+* Arreglado método shuffle para ocultar strings. Cuidado con las combinaciones, duplica el tamaño de las strings. 
+* Detectados problemas en algunas funciones hardcodeadas (se depurará en la siguiente versión). 
+
+
+##Changelog 5
+
+* Arregladas las funciones hardcodeadas (junto con la adición de bloques aleatorios pueden darse situaciones que corrompan el script, volver a ofuscar o reducir el número de funciones hardcodeadas).
+* Error Unable to parse line, se soluciona volviendo a ejecutar el script ofuscado. 
+* Arreglado bug al ocultar parámetros de funciones hardcodeadas (ahora no se ocultan en estas funciones). 
+* Algunos problemas se solucionan por la profundidad de ofuscado de números (recomendado entre 1 y 2 o entre 1 y 1).
+* Realizadas pruebas con más scripts (los resultados han sido muuy buenos).  
+* Compilación automática de los scripts con Aut2Exe y posibilidad de cambiar parámetros de compilación en config.ini.
+* Mejorado el procesamiento de parámetros.
