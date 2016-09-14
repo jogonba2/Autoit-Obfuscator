@@ -50,7 +50,7 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 	      func_n_statements_min,func_n_statements_max,func_n_guard_statements_min,func_n_guard_statements_max,\
 	      func_n_else_if_min,func_n_else_if_max,func_deep_max,func_case_values_min,func_case_values_max,\
 	      hide_numbers_deep_max_min,hide_numbers_deep_max_max,eof_fill_kb,auto_compile,out_exe,icon,compression, \
-	      upx_pack,x64,x86,console,gui):
+	      upx_pack,x64,x86,console,gui,auto_icon,auto_icon_file,hide_expressions_execute,hide_definitions_assign):
 
     try:
 	print "-"*35+Messages.general_process+"-"*35+"\n"
@@ -117,6 +117,16 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 	    print "\r"+Messages.adding_true_guard_sttmnts,
 	    AddJunkCode.add_true_guard_statements(obj)
 	    print "\r"+Messages.adding_true_guard_sttmnts," "+Messages.correct_symbol
+	
+	if hide_expressions_execute:
+	    print "\rHiding expressions with execute method ...",
+	    HideProgram.hide_expressions_with_execute(obj)
+	    print "\rHiding expressions with execute method [C]\n"
+	    
+	if hide_definitions_assign:
+	    print "\rHiding definitions with assign method ...",
+	    HideProgram.hide_definitions_with_assign(obj)
+	    print "\rHiding definitions with assign method [C]\n"	    
 	    
 	if hide_strings_replace:
 	    print "\r"+Messages.adding_code_string_rplce,
@@ -147,8 +157,8 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 	    print "\r"+Messages.adding_directives,
 	    obj  = AddJunkCode.add_random_directives(obj)
 	    print "\r"+Messages.adding_directives+" "+Messages.correct_symbol
-    except:
-	raw_input(Messages.unknown_error)
+    except Exception as e:
+	raw_input(Messages.unknown_error + str(e))
 	
     for i in xrange(max(0,it)):
 	try:
@@ -266,7 +276,7 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 	
 	except RuntimeError as re: raw_input("\n\n"+" "+orig_name+" "+Messages.sad_end+" "+Messages.stack_overflow_error+"\n")
 	except IOError as ie:      raw_input("\n\n"+" "+orig_name+" "+Messages.sad_end+" "+Messages.file_error+"\n")
-	except Exception as e:     raw_input("\n\n"+Messages.unknown_error+"\n\n"+" "+ e +"\n\n")
+	except Exception as e:     raw_input("\n\n"+Messages.unknown_error+"\n\n"+" "+ str(e) +"\n\n")
     
     print "\n\n"
     
@@ -291,7 +301,7 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
 	Utils.write_code(Utils.get_string_from_obj(obj),dest_name)
 	print "\r"+Messages.writing_code+" "+Messages.correct_symbol
 	
-    except:
+    except Exception as e:
 	raw_input(Messages.unknown_error)
 	
     print "\n\n"
@@ -311,8 +321,13 @@ def obfuscate(orig_name,dest_name,it,replace_includes,rm_comments_by_tag,rm_comm
     if auto_compile:
 	aut2exe_command_line += "/In "+dest_name+" "
 	aut2exe_command_line += "/out "+out_exe+" "
-	if icon!="None": aut2exe_command_line += "/icon "+icon+" "
-	if compression!="None": aut2exe_command_line += "/comp "+str(compression)+" "
+	if auto_icon:
+	    Utils.generate_random_icon(auto_icon_file,64,64)
+	    aut2exe_command_line += "/icon "+auto_icon_file+" "
+	else:    
+	    if icon: aut2exe_command_line += "/icon "+icon+" "
+	
+	if compression: aut2exe_command_line += "/comp "+str(compression)+" "
 	if upx_pack: aut2exe_command_line += "/pack "
 	if x64: aut2exe_command_line += "/x64 "
 	if x86: aut2exe_command_line += "/x86 "
@@ -368,6 +383,8 @@ if __name__ == "__main__":
 	add_mid_blocks  = config.getboolean("AddCode","MidBlocks") #False#
 	add_user_funcs  = config.getboolean("AddCode","UserFuncs") #True#
 	add_func_calls  = config.getboolean("AddCode","UserFuncsCalls") #False#
+	hide_definitions_assign            = config.getboolean("HideCode","DefinitionsAssign")
+	hide_expressions_execute           = config.getboolean("HideCode","ExpressionsExecute")
 	hide_strings_replace       = config.getboolean("HideCode","StringsReplace") #"False
 	hide_strings_shuffle       = config.getboolean("HideCode","StringsShuffle") #False
 	hide_strings_flip_two      = config.getboolean("HideCode","StringsFlipTwo") #False#
@@ -477,16 +494,17 @@ if __name__ == "__main__":
 	##     Compilation     ##
 	#########################
 	
-	auto_compile = config.getboolean("Compilation","Autocompile")
-	out_exe      = config.get("Compilation","Out")
-	icon         = config.get("Compilation","Icon")
-	compression  = config.getint("Compilation","Compression")
-	upx_pack     = config.getboolean("Compilation","UPXpack")
-	x64          = config.getboolean("Compilation","X64")
-	x86          = config.getboolean("Compilation","X86")
-	console      = config.getboolean("Compilation","Console")
-	gui          = config.getboolean("Compilation","Gui")
-    
+	auto_compile 	 = config.getboolean("Compilation","Autocompile")
+	out_exe     	 = config.get("Compilation","Out")
+	auto_icon    	 = config.getboolean("Compilation","AutoIcon")
+	auto_icon_file 	 = config.get("Compilation","AutoIconFile")
+	icon           	 = config.get("Compilation","IconFile")
+	compression  	 = config.getint("Compilation","Compression")
+	upx_pack     	 = config.getboolean("Compilation","UPXpack")
+	x64         	 = config.getboolean("Compilation","X64")
+	x86         	 = config.getboolean("Compilation","X86")
+	console     	 = config.getboolean("Compilation","Console")
+	gui         	 = config.getboolean("Compilation","Gui")
     except:
 	raw_input(Messages.config_file_error+" "+Messages.error_symbol)
 	exit()	
@@ -507,6 +525,6 @@ if __name__ == "__main__":
 	      func_n_statements_min,func_n_statements_max,func_n_guard_statements_min,func_n_guard_statements_max,\
 	      func_n_else_if_min,func_n_else_if_max,func_deep_max,func_case_values_min,func_case_values_max,\
 	      hide_numbers_deep_max_min,hide_numbers_deep_max_max,eof_fill_kb,auto_compile,out_exe,icon,compression, \
-	      upx_pack,x64,x86,console,gui)
+	      upx_pack,x64,x86,console,gui,auto_icon,auto_icon_file,hide_expressions_execute,hide_definitions_assign)
 
     raw_input(Messages.end_application)

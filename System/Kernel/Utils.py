@@ -6,11 +6,12 @@ except: import cpickle as pickle
 from re import sub,DOTALL
 from random import shuffle
 import hashlib as h
-from random import choice,randint
+from random import choice,randint,randrange
 from string import lowercase,uppercase
 from math import e,log
 from os import getcwd,walk
 from sys import argv
+from PIL import Image
 import Globals
 
 def extract_code(f):
@@ -123,7 +124,17 @@ def add_random_char_between_string(s,c):
 	if rnd==1: r += s[i]+c
 	else:      r += s[i]
     return r
-	
+
+
+# EdJones (daniweb.com) #
+def generate_random_icon(fname,h,w):
+    fd  = Image.new("RGB", (w, h), (255,255,255))
+    mat = fd.load()
+    for x in range(w):
+        for y in range(h):
+            mat[x,y]=(randrange(0,255),randrange(0,255),randrange(0,255))
+    fd.save(fname,"ico")
+    
 def sum(a,b): return a+b
 #def sub(a,b): return a-b
 def dot(a,b): return a*b
@@ -132,6 +143,7 @@ def exp(a): return e**a
 def log(a): return log(a)
 
 if __name__ == "__main__":
+    generate_random_icon("output.png",64,64)
     #for i in xrange(1000000):
     #	print eval(generate_true_statement(5,10))
     #print add_random_char_between_string("holaamigo","s")

@@ -761,6 +761,291 @@ def os_arch(length_min=10,length_max=15):
 EndFunc
 """
 
+def language_1(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(0)
+    return """Func """+identifier+"""()
+     Select
+          Case StringInStr("0413 0813", @OSLang)
+               Return "Dutch"
+          Case StringInStr("0409 0809 0c09 1009 1409 1809 1c09 2009 2409 2809 2c09 3009 3409", @OSLang)
+               Return "English"
+          Case StringInStr("040c 080c 0c0c 100c 140c 180c", @OSLang)
+               Return "French"
+          Case StringInStr("0407 0807 0c07 1007 1407", @OSLang)
+               Return "German"
+          Case StringInStr("0410 0810", @OSLang)
+               Return "Italian"
+          Case StringInStr("0414 0814", @OSLang)
+               Return "Norwegian"
+          Case StringInStr("0415", @OSLang)
+               Return "Polish"
+          Case StringInStr("0416 0816", @OSLang)
+               Return "Portuguese"
+          Case StringInStr("040a 080a 0c0a 100a 140a 180a 1c0a 200a 240a 280a 2c0a 300a 340a 380a 3c0a 400a 440a 480a 4c0a 500a", @OSLang)
+               Return "Spanish"
+          Case StringInStr("041d 081d", @OSLang)
+               Return "Swedish"
+          Case Else
+               Return "Other (can't determine with @OSLang directly)"
+     EndSelect
+EndFunc
+"""
+
+
+def get_language_os(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(0)
+    return """Func """+identifier+"""()
+    Local $aString[20] = [19, "0409 0809 0c09 1009 1409 1809 1c09 2009 2409 2809 2c09 3009 3409", "0404 0804 0c04 1004 0406", "0406", "0413 0813", "0425", _
+            "040b", "040c 080c 0c0c 100c 140c 180c", "0407 0807 0c07 1007 1407", "040e", "0410 0810", _
+            "0411", "0414 0814", "0415", "0416 0816", "0418", _
+            "0419", "081a 0c1a", "040a 080a 0c0a 100a 140a 180a 1c0a 200a 240a 280a 2c0a 300a 340a 380a 3c0a 400a 440a 480a 4c0a 500a", "041d 081d"]
+
+    Local $aLanguage[20] = [19, "English", "Chinese", "Danish", "Dutch", "Estonian", "Finnish", "French", "German", "Hungarian", "Italian", _
+            "Japanese", "Norwegian", "Polish", "Portuguese", "Romanian", "Russian", "Serbian", "Spanish", "Swedish"]
+    For $i = 1 To $aString[0]
+        If StringInStr($aString[$i], @OSLang) Then
+            Return $aLanguage[$i]
+        EndIf
+    Next
+    Return $aLanguage[1]
+EndFunc
+"""
+
+def get_exchange_rate_codes(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(0)
+    return """Func """+identifier+"""()
+    Local $aArray[95] = [94, _
+            'AED', 'ANG', 'ARS', 'AUD', 'BDT', 'BGN', 'BHD', 'BND', 'BOB', 'BRL', _
+            'BWP', 'CAD', 'CHF', 'CLP', 'CNY', 'COP', 'CRC', 'CZK', 'DKK', 'DOP', _
+            'DZD', 'EEK', 'EGP', 'EUR', 'FJD', 'GBP', 'HKD', 'HNL', 'HRK', 'HUF', _
+            'IDR', 'ILS', 'INR', 'ISK', 'JMD', 'JOD', 'JPY', 'KES', 'KRW', 'KWD', _
+            'KYD', 'KZT', 'LBP', 'LKR', 'LTL', 'LVL', 'MAD', 'MDL', 'MKD', 'MUR', _
+            'MVR', 'MXN', 'MYR', 'NAD', 'NGN', 'NIO', 'NOK', 'NPR', 'NZD', 'OMR', _
+            'PEN', 'PGK', 'PHP', 'PKR', 'PLN', 'PYG', 'QAR', 'RON', 'RSD', 'RUB', _
+            'SAR', 'SCR', 'SEK', 'SGD', 'SKK', 'SLL', 'SVC', 'THB', 'TND', 'TRY', _
+            'TTD', 'TWD', 'TZS', 'UAH', 'UGX', 'USD', 'UYU', 'UZS', 'VEF', 'VND', _
+            'XOF', 'YER', 'ZAR', 'ZMK']
+    Return $aArray
+EndFunc
+"""
+
+
+def get_rot_13(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(1)
+    return """Func """+identifier+"""($sString)
+    Local $iPosition = 0, _
+            $sAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', _
+            $sCharacter = '', _
+            $sRotAlphabet = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm', _
+            $sReturn = ''
+
+    For $i = 1 To StringLen($sString)
+        $sCharacter = StringMid($sString, $i, 1)
+        $iPosition = StringInStr($sAlphabet, $sCharacter, 1)
+        If $iPosition Then
+            $sReturn &= StringMid($sRotAlphabet, $iPosition, 1)
+        Else
+            $sReturn &= $sCharacter
+        EndIf
+    Next
+    Return $sReturn
+EndFunc 
+"""
+
+
+def get_uuid(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(0)
+    return """Func """+identifier+"""()
+    Return '{' & StringUpper(RegRead('HKEY_LOCAL_MACHINE64SOFTWAREMicrosoftCryptography', 'MachineGuid')) & '}'
+    EndFunc
+	   """
+
+def get_cpu_name(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(0)
+    return """Func """+identifier+"""()
+    Local $oWMIService = ObjGet('winmgmts:{impersonationLevel = impersonate}!.rootcimv2')
+    Local $oColFiles = $oWMIService.ExecQuery('Select * From Win32_Processor')
+    If IsObj($oColFiles) Then
+        For $oObjectFile In $oColFiles
+            Return StringStripWS($oObjectFile.Name, 7)
+        Next
+    EndIf
+    Return SetError(1, 0, '')
+EndFunc 
+	   """
+    
+def format_bytes_size(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(1)
+    return """Func """+identifier+"""($iBytes)
+    Local $i = 0, $aUnit[9] = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+    While $iBytes > 1023
+        $iBytes = $iBytes / 1024
+        $i += 1
+        If 8 = $i Then ExitLoop
+    WEnd
+    Return StringLeft($iBytes, StringInStr($iBytes, '.') + 3) & ' ' & $aUnit[$i]
+EndFunc
+    """
+
+def reg_exists(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(1)
+    return """Func """+identifier+"""($sKey)
+
+    RegRead($sKey, '')
+
+    Return Not (@error > 0)
+
+EndFunc
+    """
+    
+def get_bit_entropy(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(1)
+    return """Func """+identifier+"""($sStr, $fCase = True)
+    If IsBinary($sStr) Then $sStr = BinaryToString($sStr)
+    If Not IsString($sStr) Then Return SetError(1, 0, 0)
+    Local $aDice, $iH = 0, $iLen = StringLen($sStr)
+    If 0 = $iLen Then Return SetError(2, 0, 0)
+    $aDice = StringSplit($sStr, ' ')
+    If 1 < $aDice[0] Then Return $aDice[0] * 12.925
+    If StringIsDigit($sStr) Then
+        $iH = 3.3219
+    ElseIf StringIsXDigit($sStr) Then
+        $iH = 4.0000
+    ElseIf StringIsAlpha($sStr) Then
+        $iH = 4.7004
+        If $fCase Then
+            If StringRegExp($sStr, '[a-z]+') And StringRegExp($sStr, '[A-Z]+') Then $iH = 5.7004
+        EndIf
+    ElseIf StringIsAlNum($sStr) Then
+        $iH = 5.1699
+        If $fCase Then
+            If StringRegExp($sStr, '[a-z]+') And StringRegExp($sStr, '[A-Z]+') Then $iH = 5.9542
+        EndIf
+    ElseIf StringRegExp($sStr, '^[^[:cntrl:]x7F]+$') Then
+        $iH = 6.5699
+    ElseIf _StringRegExp($sStr, '^[^[:cntrl:]x7Fx81x8Dx8Fx90x9D]+$') Then
+        $iH = 7.7682
+    EndIf
+    Return $iH * $iLen
+EndFunc
+    """
+    
+def get_entropy_nist(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(1)
+    return """Func """+identifier+"""($sStr)
+    If IsBinary($sStr) Then $sStr = BinaryToString($sStr)
+    If Not IsString($sStr) Then Return SetError(1, 0, 0)
+    Local $iNist = 4, $iLen = StringLen($sStr)
+    If 0 = $iLen Then Return SetError(2, 0, 0)
+    $iLen -= 1
+    While $iLen <> 0
+        If $iLen > 19 Then
+            $iNist += 1
+        ElseIf $iLen > 7 Then
+            $iNist += 1.5
+        Else
+            $iNist += 2
+        EndIf
+         $iLen -= 1
+    WEnd
+    If StringRegExp($sStr, '[[:upper:]]') Then
+        If StringRegExp($sStr, '[^[:alpha:]]') Then $iNist += 6
+    EndIf
+    Return $iNist
+EndFunc
+    """
+    
+def rot_47(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(1)
+    return """Func """+identifier+"""($sString) 
+    Local $iPosition = 0, $sReturn = ''
+    For $i = 1 To StringLen($sString)
+        $iPosition = StringMid($sString, $i, 1)
+        If Asc($iPosition) + 47 >= 127 And Asc($iPosition) > 32 And Asc($iPosition) < 127 Then
+            $sReturn &= Chr(Asc($iPosition) - 47)
+        ElseIf Asc($iPosition) + 47 <= 126 And Asc($iPosition) > 32 And Asc($iPosition) < 127 Then
+            $sReturn &= Chr(Asc($iPosition) + 47)
+        Else
+            $sReturn &= $iPosition
+        EndIf
+    Next
+    Return $sReturn
+EndFunc
+    """
+    
+def get_separator(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(1)
+    return """Func """+identifier+"""($sString)
+    For $i = 1 To 31
+        $s = Chr($i)
+    ; $s = Chr($i)&Chr($i+1)&Chr($i)
+        If Not StringInStr($sString, $s) Then Return $s
+    Next
+    Return SetError(1)
+EndFunc
+    """
+    
+def y_day_to_date(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(2)
+    return """Func """+identifier+"""($yday, $year)
+    If _DateIsLeapYear($year) And $yday > 364 Or $yday > 365 Then Exit
+    $month = 1
+    For $day = 1 To $yday
+        If $day = $yday Then ExitLoop
+        If _DateIsValid($year & "/" & StringRight(0 & $month, 2) & "/" & StringRight(0 & $day, 2)) <> 1 Then
+            $yday = $yday - ($day - 1)
+            $day = 1
+            $month = $month + 1
+        EndIf
+    Next
+    Return($year & "/" & StringRight(0 & $month, 2) & "/" & StringRight(0 & $yday, 2))
+EndFunc
+    """
+    
+def days_in_month(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(2)
+    return """Func """+identifier+"""($iMonth,$iYear)
+    return 28 + Mod($iMonth + Floor($iMonth / 8), 2) + Mod(2, $iMonth) + Floor((2 - Mod(Mod($iYear, 4) * (Mod($iYear, 100) + Mod($iYear, 400)) + 2, (Mod($iYear, 4) * (Mod($iYear, 100) + Mod($iYear, 400)) + 1))) / $iMonth) + Floor(1/$iMonth) - Floor((1 - Mod((Mod($iYear, 4) * (Mod($iYear, 100) + Mod($iYear, 400)) + 2), (Mod($iYear, 4) * (Mod($iYear, 100) + Mod($iYear, 400)) + 1)))/$iMonth)
+EndFunc
+    """
+
+def is_magic_number_present(length_min=10,length_max=15):
+    identifier = Utils.generate_identifier(length_min,length_max)
+    Globals.defined_new_functions.append(identifier)
+    Globals.arity_new_functions.append(2)
+    return """Func """+identifier+"""($iNumber, $iMagicNumber)
+    Return BitAND($iMagicNumber, $iNumber) = $iNumber
+EndFunc
+    """
+    
 
 ### String modifiers ###
 
@@ -831,6 +1116,8 @@ def rotate_string(length_min=10,length_max=15):
 EndFunc
 """
 
+
+
 HARDCODED_STRING_MODIFIERS = [shuffle_string,rotate_string,flip_two_string,replace_string,reverse_string]
 
 HARDCODED_PROGRAMS = [hex_to_string,string_repeat,string_to_hex,string_shuffle,
@@ -842,5 +1129,8 @@ HARDCODED_PROGRAMS = [hex_to_string,string_repeat,string_to_hex,string_shuffle,
 		      image_size,switch_color,bin_to_int,int_to_bin,bytes_to_bits,bits_to_bytes,it_fibo,
 		      miles_to_km,km_to_miles,random_char_gen,check_idle,m_sec,return_card,
 		      string_to_ip_array,string_to_struct,is_file,get_time_online,
-		      random_text,is_maximized,ternary,get_last_error_message,os_arch]
+		      random_text,is_maximized,ternary,get_last_error_message,os_arch,language_1,get_language_os,
+		      get_exchange_rate_codes,get_rot_13,get_uuid,get_cpu_name,format_bytes_size,reg_exists,
+		      get_bit_entropy,get_entropy_nist,rot_47,get_separator,y_day_to_date,days_in_month,
+		      is_magic_number_present]
 

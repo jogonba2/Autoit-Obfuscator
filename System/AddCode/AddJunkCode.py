@@ -10,20 +10,71 @@ from GenerateCode import Directives as d
 from random import sample,randint,choice,shuffle
 from re import split
 
-def add_true_guard_statements(obj,n_true_guard_statements_min=3,n_true_guard_statements_max=5):
-    for i in xrange(len(obj)):
-	n_guard_statements = randint(min(n_true_guard_statements_min,n_true_guard_statements_max),
-				     max(n_true_guard_statements_min,n_true_guard_statements_max))
+def add_true_guard_statements_if(line,n_guard_statements_left,true_guard_statements_left,
+			         n_guard_statements_right,true_guard_statements_right):
+    line = line.strip()
+    if line[-1]!="_": 
+	aux    = line.title()
+	splitted_aux = split("\s",aux)
+	splitted     = split("\s",line)
+	index_then = splitted_aux.index("Then")
+		    
+	line = splitted[0] + " " 
+		    
+	if n_guard_statements_left>0:
+	    line += Utils.low_up_string(" And ").join(true_guard_statements_left) + Utils.low_up_string(" And ")
+			
+	line += " ".join(splitted[1:index_then])
+		    
+	if n_guard_statements_right>0:
+	    line += Utils.low_up_string(" And ") + Utils.low_up_string(" And ").join(true_guard_statements_right)
+			
+	line += " " + " ".join(splitted[index_then:])
+    return line
+
+def add_true_guard_statements_while(line,n_guard_statements_left,true_guard_statements_left,
+			         n_guard_statements_right,true_guard_statements_right):
+				     				     
+    line = line.strip()
+    if line[-1]!="_":
+	splitted = split("\s",line)
+	line = splitted[0] + " "
+	if n_guard_statements_left>0:
+	    line += Utils.low_up_string(" And ").join(true_guard_statements_left) + Utils.low_up_string(" And ")
+	line += " ".join(splitted[1:])
+	if n_guard_statements_right>0:
+	    line += Utils.low_up_string(" And ") + Utils.low_up_string(" And ").join(true_guard_statements_right)
+    return line
 				     
-	if ex.is_if(obj[i]) or ex.is_else_if(obj[i]) or  \
-			    ex.is_while(obj[i]) or ex.is_until(obj[i]):
-	    true_guard_statements = ""
-	    obj[i] = obj[i].strip()
-	    splitted              = split("\s",obj[i])
-	    for j in xrange(n_guard_statements):
-		true_guard_statements += Utils.generate_true_statement(n_min_value=100,n_max_value=300)
-		true_guard_statements += Utils.low_up_string(" And ")
-	    obj[i] = splitted[0] + " " + true_guard_statements + " " + " ".join(splitted[1:]) + " "
+def add_true_guard_statements(obj,n_true_guard_statements_min_left=1,n_true_guard_statements_max_left=2,
+			      n_true_guard_statements_min_right=1,n_true_guard_statements_max_right=2):
+    for i in xrange(len(obj)):
+	n_guard_statements_left = randint(min(n_true_guard_statements_min_left,n_true_guard_statements_max_left),
+				     max(n_true_guard_statements_min_left,n_true_guard_statements_max_left))
+	
+	n_guard_statements_right = randint(min(n_true_guard_statements_min_right,n_true_guard_statements_max_right),
+				     max(n_true_guard_statements_min_right,n_true_guard_statements_max_right))
+	
+	is_if       = ex.is_if(obj[i])
+	is_else_if  = ex.is_else_if(obj[i])
+	is_while    = ex.is_while(obj[i])
+	is_until    = ex.is_until(obj[i])
+	
+	if is_if or is_else_if or is_while or is_until:
+	    
+	    true_guard_statements_left     = [Utils.generate_true_statement(n_min_value=100,n_max_value=300) for j in xrange(n_guard_statements_left)]
+	    true_guard_statements_right    = [Utils.generate_true_statement(n_min_value=100,n_max_value=300) for j in xrange(n_guard_statements_right)]
+		
+	    if is_if or is_else_if: obj[i] = add_true_guard_statements_if(obj[i],n_guard_statements_left,
+									  true_guard_statements_left,
+									  n_guard_statements_right,
+									  true_guard_statements_right)
+									  
+	    if is_while or is_until: obj[i] = add_true_guard_statements_while(obj[i],n_guard_statements_left,
+									  true_guard_statements_left,
+									  n_guard_statements_right,
+									  true_guard_statements_right)
+		
     return obj
 	    
 def add_comments(obj,n_comments_min=5,n_comments_max=20,comment_length_min=30,comment_length_max=200):

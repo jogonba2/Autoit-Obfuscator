@@ -145,6 +145,8 @@ def extract_float(line):   return findall(" ([-]?\d+\.\d+) ",line)
 
 def extract_relational_operators(line): return findall("(<=|>=|=|<>|>|<)",line)
 
+def extract_assign_expressions(line): return findall(r"(\$\w+)\s*(=|\+=|-=|\*=|\/=|&=)\s*(.*)\s*",line)
+
 ############
 
 ## RELATIONAL EXPRESSIONS #

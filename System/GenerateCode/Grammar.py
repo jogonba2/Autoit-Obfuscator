@@ -145,52 +145,99 @@ def simple_block(n_statements_min=10,n_statements_max=20):
     return res
 
 def block_do_until(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements_min=1,n_guard_statements_max=5,n_else_if_min=1,n_else_if_max=5,deep_max=5,case_values_min=-1000,case_values_max=1000): 
-    # Generalizar bucles do ... until con más de una condición en la guarda, incrementos variables y variabilidad en la actualización de variables (incrementar parte derecha = decrementar parte izquierda) #
-    var_one,val_one = variable(),integer()
-    var_two,val_two = variable(),integer()
-    declarations    = Utils.generate_random_declarator() + var_one + " = " + val_one + "\n" +\
-		      Utils.generate_random_declarator() + var_two + " = " + val_two + "\n"
-    rel_op          = choice([">","<",">=","<=","<>"])
-    res             = Utils.low_up_string(" Do \n") + \
-		      block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,
-			    n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,
-			    case_values_max)+"\n"
-    if   rel_op == ">":   	res        += var_one + " += 1\n"
-    elif rel_op == "<":  	res        += var_one + " -= 1\n"
-    elif rel_op == ">=":  	res        += var_one + " += 1\n"
-    elif rel_op == "<=":  	res        += var_one + " -= 1\n"
-    elif rel_op == "<>":  	res        += var_one + " += 1\n"
-    elif rel_op == "=": 
-	v_max = max(val_one,val_two)
-	if v_max == val_one:    res += var_one + " -= 1\n"
-	else:                   res += var_two + " -= 1\n"
-    res            += Utils.low_up_string(" Until ") + var_one + rel_op + var_two + "\n"
-    return declarations+res
-	
+    n_guard_statements = randint(min(n_guard_statements_min,n_guard_statements_max),
+				 max(n_guard_statements_min,n_guard_statements_max))
+    vars_one = []
+    vars_two = []
+    vals_one = []
+    vals_two = []
+    rel_ops  = []
+    declarations = []
+    for i in xrange(n_guard_statements):
+	vars_one.append(variable())
+	vars_two.append(variable())
+	vals_one.append(integer(100,1000))
+	vals_two.append(integer(100,1000))
+	rel_ops.append(choice([">","<",">=","<=","="]))
+	declarations.append(Utils.generate_random_declarator() + vars_one[i] + " = " + vals_one[i])
+	declarations.append(Utils.generate_random_declarator() + vars_two[i] + " = " + vals_two[i])
+    res = Utils.low_up_string(" Do \n") + \
+	  block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,
+		n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,
+		case_values_max)+"\n"
+    
+    for i in xrange(n_guard_statements):
+	if rel_ops[i]==">":
+	    if vals_one[i]<vals_two[i]: 
+		res += choice([vars_one[i] + " += 1\n", vars_two[i] + " -= 1\n"])
+	elif rel_ops[i]=="<":
+	    if vals_one[i]>vals_two[i]:  res += choice([vars_one[i] + " -= 1\n",vars_two[i] + " += 1\n"])
+	elif rel_ops[i]==">=":
+	    if vals_one[i]<=vals_two[i]: 
+		res += choice([vars_one[i] + " += 1\n", vars_two[i] + " -= 1\n"])
+	elif rel_ops[i]=="<=":
+	     if vals_one[i]>=vals_two[i]: res += choice([vars_one[i] + " -= 1\n",vars_two[i] + " += 1\n"])
+	elif rel_ops[i]=="=":
+	    if vals_one[i]<vals_two[i]: res += choice([vars_one[i] + " += 1\n",vars_two[i] + " -= 1\n"])
+	    elif vals_one[i]>vals_two[i]: res += choice([vars_one[i] + " -= 1\n",vars_two[i] + " += 1\n"])
+    
+    res += Utils.low_up_string(" Until ")
+    
+    for i in xrange(n_guard_statements):
+	res += vars_one[i] + " " + rel_ops[i] + " "+ vars_two[i]
+	if i<n_guard_statements-1: res += Utils.low_up_string(" Or ")
+    
+    res += "\n"
+    return "\n".join(declarations)+"\n"+res
+    
 def block_while(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements_min=1,n_guard_statements_max=5,n_else_if_min=1,n_else_if_max=5,deep_max=5,case_values_min=-1000,case_values_max=1000): 
-    # Generalizar bucles while con más de una condición en la guarda, incrementos variables y variabilidad en la actualización de variables (incrementar parte derecha = decrementar parte izquierda) #
-    var_one,val_one = variable(),integer()
-    var_two,val_two = variable(),integer()
-    declarations    = Utils.generate_random_declarator() + var_one + " = " + val_one + "\n" +\
-		      Utils.generate_random_declarator() + var_two + " = " + val_two + "\n"
-    rel_op          = choice([">","<",">=","<=","="])#relational_operation()
-    res             = Utils.low_up_string(" While ")+var_one+rel_op+var_two+"\n"+ \
-		      block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,
+    n_guard_statements = randint(min(n_guard_statements_min,n_guard_statements_max),
+			        max(n_guard_statements_min,n_guard_statements_max))
+    vars_one = []
+    vars_two = []
+    vals_one = []
+    vals_two = []
+    rel_ops  = []
+    declarations = []
+    for i in xrange(n_guard_statements):
+	vars_one.append(variable())
+	vars_two.append(variable())
+	vals_one.append(integer(100,1000))
+	vals_two.append(integer(100,1000))
+	rel_ops.append(choice([">","<",">=","<=","="]))
+	declarations.append(Utils.generate_random_declarator() + vars_one[i] + " = " + vals_one[i])
+	declarations.append(Utils.generate_random_declarator() + vars_two[i] + " = " + vals_two[i])
+    
+    res      = Utils.low_up_string(" While ")
+   
+    for i in xrange(n_guard_statements):
+	res += vars_one[i] + " " + rel_ops[i] + " "+ vars_two[i]
+	if i<n_guard_statements-1: res += Utils.low_up_string(" Or ")
+    
+    res += "\n"
+    
+    res += block(deep_act+1,n_statements_min,n_statements_max,n_guard_statements_min,
 			    n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,
 			    case_values_max)+"\n"
 			    
-    if   rel_op == ">":   	res        += var_one + " -= 1\n"
-    elif rel_op == "<":  	res        += var_one + " += 1\n"
-    elif rel_op == ">=":  	res        += var_one + " -= 1\n"
-    elif rel_op == "<=":  	res        += var_one + " += 1\n"
-    elif rel_op == "=":   	res        += var_one + " += 1\n"
-    elif rel_op == "<>": 
-	v_max = max(val_one,val_two)
-	if v_max == val_one:    res += var_one + " -= 1\n"
-	else:                   res += var_two + " -= 1\n"
-    res += Utils.low_up_string("\nWEnd\n")
-    return declarations+res 
     
+    for i in xrange(n_guard_statements):
+	if rel_ops[i]==">":
+	    if vals_one[i]>vals_two[i]: 
+		res += choice([vars_one[i] + " -= 1\n", vars_two[i] + " += 1\n"])
+	elif rel_ops[i]=="<":
+	    if vals_one[i]<vals_two[i]:  res += choice([vars_one[i] + " += 1\n",vars_two[i] + " -= 1\n"])
+	elif rel_ops[i]==">=":
+	    if vals_one[i]>=vals_two[i]: 
+		res += choice([vars_one[i] + " -= 1\n", vars_two[i] + " += 1\n"])
+	elif rel_ops[i]=="<=":
+	     if vals_one[i]<=vals_two[i]: res += choice([vars_one[i] + " += 1\n",vars_two[i] + " -= 1\n"])
+	elif rel_ops[i]=="=":
+	    if vals_one[i]==vals_two[i]: res += choice([vars_one[i] + " += 1\n",vars_two[i] + " -= 1\n" , 
+							vars_one[i] + " -= 1\n",vars_two[i] + " += 1\n"])
+			
+    res += Utils.low_up_string("\nWEnd\n")
+    return "\n".join(declarations)+"\n"+res
     
 def block_if(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements_min=1,n_guard_statements_max=5,n_else_if_min=1,n_else_if_max=5,deep_max=5,case_values_min=-1000,case_values_max=1000): 
     res = Utils.low_up_string("If ")
@@ -236,6 +283,7 @@ def block_with(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statemen
 			n_guard_statements_max,n_else_if_min,n_else_if_max,deep_max,case_values_min,
 			case_values_max)+Utils.low_up_string("\n EndWith\n")
     return declaration+res
+    
     
 def block_for_object(deep_act,n_statements_min=10,n_statements_max=20,n_guard_statements_min=1,n_guard_statements_max=5,n_else_if_min=1,n_else_if_max=5,deep_max=5,case_values_min=-1000,case_values_max=1000): 
     v     	= variable()

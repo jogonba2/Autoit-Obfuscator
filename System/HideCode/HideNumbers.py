@@ -37,9 +37,8 @@ def hide_numbers(obj,deep_max_min=3,deep_max_max=5,lower_bound=-10000,upper_boun
     return obj
 	
 if __name__ == "__main__":
-    obfs = hide_number(78.764,0)
+    obfs = hide_number(-37,1)
     print obfs
-    print eval(obfs) #
     """
     MATH_FUNCTIONS              = [Utils.sum,Utils.sub,Utils.dot]#,Utils.div,Utils.exp]
     INVERSE_MATH_FUNCTIONS      = [Utils.sub,Utils.sum,Utils.dot]#,Utils.div,Utils.log]
